@@ -712,7 +712,7 @@ static constexpr NWidgetPart _nested_town_game_view_widgets[] = {
 	NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
 		NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_SHOW_AUTHORITY), SetMinimalSize(80, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(STR_TOWN_VIEW_LOCAL_AUTHORITY_BUTTON, STR_TOWN_VIEW_LOCAL_AUTHORITY_TOOLTIP),
 		NWidget(WWT_TEXTBTN, COLOUR_BROWN, WID_TV_CATCHMENT), SetMinimalSize(40, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(STR_BUTTON_CATCHMENT, STR_TOOLTIP_CATCHMENT),
-		NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_CB), SetMinimalSize(20, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(CM_STR_BUTTON_CB, 0),
+		// NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_CB), SetMinimalSize(20, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(CM_STR_BUTTON_CB, 0),
 		NWidget(WWT_RESIZEBOX, COLOUR_BROWN),
 	EndContainer(),
 };
@@ -745,7 +745,7 @@ static constexpr NWidgetPart _nested_town_editor_view_widgets[] = {
 		NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_EXPAND), SetMinimalSize(80, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(STR_TOWN_VIEW_EXPAND_BUTTON, STR_TOWN_VIEW_EXPAND_TOOLTIP),
 		NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_DELETE), SetMinimalSize(80, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(STR_TOWN_VIEW_DELETE_BUTTON, STR_TOWN_VIEW_DELETE_TOOLTIP),
 		NWidget(WWT_TEXTBTN, COLOUR_BROWN, WID_TV_CATCHMENT), SetMinimalSize(40, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(STR_BUTTON_CATCHMENT, STR_TOOLTIP_CATCHMENT),
-		NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_CB), SetMinimalSize(20, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(CM_STR_BUTTON_CB, 0),
+		// NWidget(WWT_PUSHTXTBTN, COLOUR_BROWN, WID_TV_CB), SetMinimalSize(20, 12), SetFill(1, 1), SetResize(1, 0), SetDataTip(CM_STR_BUTTON_CB, 0),
 		NWidget(WWT_RESIZEBOX, COLOUR_BROWN),
 	EndContainer(),
 };
@@ -1449,33 +1449,33 @@ static void DrawExtraTownInfo (Rect &r, Town *town, uint line, bool show_house_s
 	// if(town->growth_rate == TOWN_GROW_RATE_CUSTOM_NONE) grow_rate = 0;
 	// else grow_rate = TownTicksToDays((town->growth_rate & ~TOWN_GROW_RATE_CUSTOM) + 1);
 
-	SetDParam(0, town->growth_rate);
-	SetDParam(1, HasBit(town->flags, TOWN_CUSTOM_GROWTH) ? CM_STR_TOWN_VIEW_GROWTH_RATE_CUSTOM : STR_EMPTY);
-	// SetDParam(2, town->grow_counter < 16000 ? TownTicksToDays(town->grow_counter + 1) : -1);
-	SetDParam(2, town->grow_counter);
-	SetDParam(3, town->time_until_rebuild);
-	SetDParam(4, HasBit(town->flags, TOWN_IS_GROWING) ? 1 : 0);
-	SetDParam(5, town->fund_buildings_months);
-	DrawString(r, CM_STR_TOWN_VIEW_GROWTH);
-	r.top += line;
+	// SetDParam(0, town->growth_rate);
+	// SetDParam(1, HasBit(town->flags, TOWN_CUSTOM_GROWTH) ? CM_STR_TOWN_VIEW_GROWTH_RATE_CUSTOM : STR_EMPTY);
+	// // SetDParam(2, town->grow_counter < 16000 ? TownTicksToDays(town->grow_counter + 1) : -1);
+	// SetDParam(2, town->grow_counter);
+	// SetDParam(3, town->time_until_rebuild);
+	// SetDParam(4, HasBit(town->flags, TOWN_IS_GROWING) ? 1 : 0);
+	// SetDParam(5, town->fund_buildings_months);
+	// DrawString(r, CM_STR_TOWN_VIEW_GROWTH);
+	// r.top += line;
 
-	if (show_house_states_info) {
-		SetDParam(0, town->cm.houses_constructing);
-		SetDParam(1, town->cm.houses_reconstructed_last_month);
-		SetDParam(2, town->cm.houses_demolished_last_month);
-		DrawString(r, CM_STR_TOWN_VIEW_HOUSE_STATE);
-		r.top += line;
-	}
+	// if (show_house_states_info) {
+	// 	SetDParam(0, town->cm.houses_constructing);
+	// 	SetDParam(1, town->cm.houses_reconstructed_last_month);
+	// 	SetDParam(2, town->cm.houses_demolished_last_month);
+	// 	DrawString(r, CM_STR_TOWN_VIEW_HOUSE_STATE);
+	// 	r.top += line;
+	// }
 
-	///houses stats
-	SetDParam(0, town->cm.hs_total);
-	SetDParam(1, town->cm.hs_last_month);
-	SetDParam(2, town->cm.cs_total);
-	SetDParam(3, town->cm.cs_last_month);
-	SetDParam(4, town->cm.hr_total);
-	SetDParam(5, town->cm.hr_last_month);
-	DrawString(r, CM_STR_TOWN_VIEW_GROWTH_TILES);
-	r.top += line;
+	// ///houses stats
+	// SetDParam(0, town->cm.hs_total);
+	// SetDParam(1, town->cm.hs_last_month);
+	// SetDParam(2, town->cm.cs_total);
+	// SetDParam(3, town->cm.cs_last_month);
+	// SetDParam(4, town->cm.hr_total);
+	// SetDParam(5, town->cm.hr_last_month);
+	// DrawString(r, CM_STR_TOWN_VIEW_GROWTH_TILES);
+	// r.top += line;
 }
 
 bool CB_sortCargoesByFrom(CargoX first, CargoX second){
