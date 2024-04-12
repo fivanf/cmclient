@@ -22,6 +22,7 @@ set(BASESET_OTHER_SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/OpenTTD-Serif.ttf
         ${CMAKE_CURRENT_SOURCE_DIR}/OpenTTD-Small.ttf
         ${CMAKE_CURRENT_SOURCE_DIR}/OpenTTD-Mono.ttf
+        ${CMAKE_CURRENT_SOURCE_DIR}/opengfx2_8.tar
 )
 
 # Done by the subdirectories, if nforenum / grfcodec is installed
