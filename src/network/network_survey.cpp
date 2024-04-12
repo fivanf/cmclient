@@ -85,6 +85,8 @@ std::string NetworkSurveyHandler::CreatePayload(Reason reason, bool for_preview)
  */
 void NetworkSurveyHandler::Transmit(Reason reason, bool blocking)
 {
+	return;  // IF: don't send survey under any circumstances
+
 	if constexpr (!NetworkSurveyHandler::IsSurveyPossible()) {
 		Debug(net, 4, "Survey: not possible to send survey; most likely due to missing JSON library at compile-time");
 		return;

@@ -33,6 +33,7 @@ protected:
 	NetworkRecvStatus Receive_ADMIN_RCON(Packet &p) override;
 	NetworkRecvStatus Receive_ADMIN_GAMESCRIPT(Packet &p) override;
 	NetworkRecvStatus Receive_ADMIN_PING(Packet &p) override;
+	NetworkRecvStatus Receive_ADMIN_RPC_REQUEST(Packet &p) override;
 
 	NetworkRecvStatus SendProtocol();
 	NetworkRecvStatus SendPong(uint32_t d1);
@@ -69,6 +70,8 @@ public:
 	NetworkRecvStatus SendCmdNames();
 	NetworkRecvStatus SendCmdLogging(ClientID client_id, const CommandPacket &cp);
 	NetworkRecvStatus SendRconEnd(const std::string_view command);
+
+	NetworkRecvStatus SendRpcResponse(std::string_view json_data);
 
 	static void Send();
 	static void AcceptConnection(SOCKET s, const NetworkAddress &address);
