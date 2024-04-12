@@ -92,6 +92,9 @@ NetworkRecvStatus NetworkAdminSocketHandler::HandlePacket(Packet &p)
 		case ADMIN_PACKET_SERVER_RCON_END:        return this->Receive_SERVER_RCON_END(p);
 		case ADMIN_PACKET_SERVER_PONG:            return this->Receive_SERVER_PONG(p);
 
+		case IF_ADMIN_PACKET_ADMIN_RPC_REQUEST:   return this->Receive_ADMIN_RPC_REQUEST(p);
+		case IF_ADMIN_PACKET_SERVER_RPC_RESPONSE: return this->Receive_SERVER_RPC_RESPONSE(p);
+
 		default:
 			Debug(net, 0, "[tcp/admin] Received invalid packet type {} from '{}' ({})", type, this->admin_name, this->admin_version);
 			this->CloseConnection();
@@ -165,3 +168,7 @@ NetworkRecvStatus NetworkAdminSocketHandler::Receive_SERVER_CMD_NAMES(Packet &) 
 NetworkRecvStatus NetworkAdminSocketHandler::Receive_SERVER_CMD_LOGGING(Packet &) { return this->ReceiveInvalidPacket(ADMIN_PACKET_SERVER_CMD_LOGGING); }
 NetworkRecvStatus NetworkAdminSocketHandler::Receive_SERVER_RCON_END(Packet &) { return this->ReceiveInvalidPacket(ADMIN_PACKET_SERVER_RCON_END); }
 NetworkRecvStatus NetworkAdminSocketHandler::Receive_SERVER_PONG(Packet &) { return this->ReceiveInvalidPacket(ADMIN_PACKET_SERVER_PONG); }
+
+
+NetworkRecvStatus NetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Packet &) { return this->ReceiveInvalidPacket(IF_ADMIN_PACKET_ADMIN_RPC_REQUEST); }
+NetworkRecvStatus NetworkAdminSocketHandler::Receive_SERVER_RPC_RESPONSE(Packet &) { return this->ReceiveInvalidPacket(IF_ADMIN_PACKET_SERVER_RPC_RESPONSE); }

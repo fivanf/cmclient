@@ -62,6 +62,9 @@ enum PacketAdminType : uint8_t {
 	ADMIN_PACKET_SERVER_PONG,            ///< The server replies to a ping request from the admin.
 	ADMIN_PACKET_SERVER_CMD_LOGGING,     ///< The server gives the admin copies of incoming command packets.
 
+	IF_ADMIN_PACKET_ADMIN_RPC_REQUEST= 0xFD,
+	IF_ADMIN_PACKET_SERVER_RPC_RESPONSE = 0xFE,
+
 	INVALID_ADMIN_PACKET = 0xFF,         ///< An invalid marker for admin packets.
 };
 
@@ -487,6 +490,9 @@ protected:
 	 * @return The state the network should have.
 	 */
 	virtual NetworkRecvStatus Receive_SERVER_RCON_END(Packet &p);
+
+	virtual NetworkRecvStatus Receive_ADMIN_RPC_REQUEST(Packet &p);
+	virtual NetworkRecvStatus Receive_SERVER_RPC_RESPONSE(Packet &p);
 
 	NetworkRecvStatus HandlePacket(Packet &p);
 public:

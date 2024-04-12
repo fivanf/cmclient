@@ -23,6 +23,10 @@
 #include "../rev.h"
 #include "../game/game.hpp"
 
+#include "../misc_cmd.h"
+
+#include "../citymania/cm_commands.hpp"
+
 #include "../safeguards.h"
 
 
@@ -622,6 +626,39 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::SendCmdLogging(ClientID clien
 
 	return NETWORK_RECV_STATUS_OKAY;
 }
+
+NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Packet &p)
+{
+	if (this->status == ADMIN_STATUS_INACTIVE) return this->SendError(NETWORK_ERROR_NOT_EXPECTED);
+	uint32_t request_id = p.Recv_uint32();
+	uint32_t command = p.Recv_uint32();
+	uint64_t arg1 = p.Recv_uint64();
+	uint64_t arg2 = p.Recv_uint64();
+	switch (command) {
+		case 0: { // max_loan
+			auto company_id = (CompanyID)(arg1 - 1);
+			auto max_loan = (Money)arg2;
+			if (!Company::IsValidID(company_id)) {
+				return this->SendRpcResponse(fmt::format("{{\"error\": \"Invalid company\", \"request_id\": {}}}", request_id));
+			}
+			fmt::println("Setting max loan {} for company {}", (uint64_t)max_loan, company_id);
+			Command<CMD_SET_COMPANY_MAX_LOAN>::Post(STR_ERROR_CAN_T_DO_THIS, company_id, max_loan);
+			citymania::cmd::SetCompanyMaxLoan(company_id, max_loan).as_company(OWNER_DEITY).post();
+			return NETWORK_RECV_STATUS_OKAY;
+		}
+	}
+
+	return NETWORK_RECV_STATUS_OKAY;
+}
+
+NetworkRecvStatus ServerNetworkAdminSocketHandler::SendRpcResponse(std::string_view json_data)
+{
+	auto p = std::make_unique<Packet>(IF_ADMIN_PACKET_SERVER_RPC_RESPONSE);
+	p->Send_string(json_data);
+	this->SendPacket(std::move(p));
+	return NETWORK_RECV_STATUS_OKAY;
+}
+
 
 /***********
  * Receiving functions
