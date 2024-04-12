@@ -42,7 +42,12 @@
 
 #include "citymania/cm_hotkeys.hpp"
 
+#include "network/network_func.h"
+#include "querystring_gui.h"
+
 #include "safeguards.h"
+
+const std::string SERVER_1_ADDR = "31.129.110.12:3979";
 
 
 /**
@@ -109,6 +114,8 @@ struct SelectGameWindow : public Window {
 	uint cur_viewport_command_time;
 	uint mouse_idle_time;
 	Point mouse_idle_pos;
+
+	QueryString name_editbox;       ///< Client name editbox.
 
 	/**
 	 * Find and parse all viewport command signs.
@@ -178,10 +185,14 @@ struct SelectGameWindow : public Window {
 		}
 	}
 
-	SelectGameWindow(WindowDesc *desc) : Window(desc)
+	SelectGameWindow(WindowDesc *desc) : Window(desc), name_editbox(NETWORK_NAME_LENGTH)
 	{
 		this->CreateNestedTree();
 		this->FinishInitNested(0);
+
+		this->querystrings[IF_WID_SGI_CLIENT] = &this->name_editbox;
+		this->name_editbox.text.Assign(_settings_client.network.client_name);
+
 		this->OnInvalidateData();
 
 		this->ReadIntroGameViewportCommands();
@@ -375,6 +386,18 @@ struct SelectGameWindow : public Window {
 			case WID_SGI_AI_SETTINGS:     ShowAIConfigWindow(); break;
 			case WID_SGI_GS_SETTINGS:     ShowGSConfigWindow(); break;
 			case WID_SGI_EXIT:            HandleExitGameRequest(); break;
+			case IF_WID_SGI_SERVER_1:     NetworkClientConnectGame(SERVER_1_ADDR, COMPANY_SPECTATOR); break;
+		}
+	}
+
+	void OnEditboxChanged(WidgetID wid) override
+	{
+		switch (wid) {
+			case IF_WID_SGI_CLIENT:
+				/* Validation of the name will happen once the user tries to join or start a game, as getting
+				 * error messages while typing (e.g. when you clear the name) defeats the purpose of the check. */
+				_settings_client.network.client_name = this->name_editbox.text.buf;
+				break;
 		}
 	}
 };
@@ -383,6 +406,15 @@ static constexpr NWidgetPart _nested_select_game_widgets[] = {
 	NWidget(WWT_CAPTION, COLOUR_BROWN), SetDataTip(STR_INTRO_CAPTION, STR_NULL),
 	NWidget(WWT_PANEL, COLOUR_BROWN),
 		NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_wide, 0), SetPadding(WidgetDimensions::unscaled.sparse),
+
+			NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_sparse, 0), SetPIPRatio(1, 1, 1),
+				NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_normal, 0),
+					NWidget(WWT_TEXT, COLOUR_ORANGE, IF_WID_SGI_CLIENT_LABEL), SetDataTip(STR_NETWORK_SERVER_LIST_PLAYER_NAME, STR_NULL),
+					NWidget(WWT_EDITBOX, COLOUR_ORANGE, IF_WID_SGI_CLIENT), SetMinimalSize(151, 12), SetFill(1, 0), SetResize(1, 0),
+										SetDataTip(STR_NETWORK_SERVER_LIST_PLAYER_NAME_OSKTITLE, STR_NETWORK_SERVER_LIST_ENTER_NAME_TOOLTIP),
+				EndContainer(),
+				NWidget(WWT_PUSHTXTBTN, COLOUR_GREEN, IF_WID_SGI_SERVER_1), SetDataTip(IF_STR_INTRO_SERVER_1, IF_STR_INTRO_TOOLTIP_SERVER_1), SetFill(1, 0),
+			EndContainer(),
 
 			NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_sparse, 0),
 				/* 'New Game' and 'Load Game' buttons */
@@ -400,7 +432,7 @@ static constexpr NWidgetPart _nested_select_game_widgets[] = {
 				/* 'Scenario Editor' and 'Multiplayer' buttons */
 				NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
 					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_EDIT_SCENARIO), SetDataTip(STR_INTRO_SCENARIO_EDITOR, STR_INTRO_TOOLTIP_SCENARIO_EDITOR), SetFill(1, 0),
-					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_PLAY_NETWORK), SetDataTip(STR_INTRO_MULTIPLAYER, STR_INTRO_TOOLTIP_MULTIPLAYER), SetFill(1, 0),
+					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_HELP), SetDataTip(STR_INTRO_HELP, STR_INTRO_TOOLTIP_HELP), SetFill(1, 0),
 				EndContainer(),
 			EndContainer(),
 
@@ -432,22 +464,16 @@ static constexpr NWidgetPart _nested_select_game_widgets[] = {
 				EndContainer(),
 
 				/* 'AI Settings' and 'Game Script Settings' buttons */
-				NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
-					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_AI_SETTINGS), SetDataTip(STR_INTRO_AI_SETTINGS, STR_INTRO_TOOLTIP_AI_SETTINGS), SetFill(1, 0),
-					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_GS_SETTINGS), SetDataTip(STR_INTRO_GAMESCRIPT_SETTINGS, STR_INTRO_TOOLTIP_GAMESCRIPT_SETTINGS), SetFill(1, 0),
-				EndContainer(),
+				// NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
+				// 	NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_AI_SETTINGS), SetDataTip(STR_INTRO_AI_SETTINGS, STR_INTRO_TOOLTIP_AI_SETTINGS), SetFill(1, 0),
+				// 	NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_GS_SETTINGS), SetDataTip(STR_INTRO_GAMESCRIPT_SETTINGS, STR_INTRO_TOOLTIP_GAMESCRIPT_SETTINGS), SetFill(1, 0),
+				// EndContainer(),
 
 				/* 'Check Online Content' and 'NewGRF Settings' buttons */
-				NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
-					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_CONTENT_DOWNLOAD), SetDataTip(STR_INTRO_ONLINE_CONTENT, STR_INTRO_TOOLTIP_ONLINE_CONTENT), SetFill(1, 0),
-					NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_GRF_SETTINGS), SetDataTip(STR_INTRO_NEWGRF_SETTINGS, STR_INTRO_TOOLTIP_NEWGRF_SETTINGS), SetFill(1, 0),
-				EndContainer(),
-			EndContainer(),
-
-			/* 'Help and Manuals' and 'Highscore Table' buttons */
-			NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
-				NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_HELP), SetDataTip(STR_INTRO_HELP, STR_INTRO_TOOLTIP_HELP), SetFill(1, 0),
-				NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_HIGHSCORE), SetDataTip(STR_INTRO_HIGHSCORE, STR_INTRO_TOOLTIP_HIGHSCORE), SetFill(1, 0),
+				// NWidget(NWID_HORIZONTAL, NC_EQUALSIZE),
+				// 	NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_CONTENT_DOWNLOAD), SetDataTip(STR_INTRO_ONLINE_CONTENT, STR_INTRO_TOOLTIP_ONLINE_CONTENT), SetFill(1, 0),
+				// 	NWidget(WWT_PUSHTXTBTN, COLOUR_ORANGE, WID_SGI_GRF_SETTINGS), SetDataTip(STR_INTRO_NEWGRF_SETTINGS, STR_INTRO_TOOLTIP_NEWGRF_SETTINGS), SetFill(1, 0),
+				// EndContainer(),
 			EndContainer(),
 
 			/* 'Exit' button */

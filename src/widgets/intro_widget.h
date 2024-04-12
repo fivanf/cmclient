@@ -35,6 +35,10 @@ enum SelectGameIntroWidgets : WidgetID {
 	WID_SGI_AI_SETTINGS,           ///< AI button.
 	WID_SGI_GS_SETTINGS,           ///< Game Script button.
 	WID_SGI_EXIT,                  ///< Exit button.
+	IF_WID_SGI_SERVER_1,
+	IF_WID_SGI_CLIENT_LABEL,
+	IF_WID_SGI_CLIENT,
+
 };
 
 #endif /* WIDGETS_INTRO_WIDGET_H */

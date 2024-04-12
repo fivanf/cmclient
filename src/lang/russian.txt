@@ -6522,3 +6522,7 @@ CM_STR_BUILD_INFO_OVERLAY_ERROR                                 :{RED}{STRING}
 CM_STR_BUILD_INFO_OVERLAY_ERROR_UNKNOWN                         :{RED}Неизвестная Ошибка!
 
 CM_STR_VEHICLE_INFO_BUILT_VALUE_WITH_ID                         :{LTBLUE}{ENGINE} {BLACK}Построен в {LTBLUE}{NUM} г.{BLACK} Стоимость: {LTBLUE}{CURRENCY_LONG}{BLACK} ID: {LTBLUE}{NUM}
+
+IF_STR_INTRO_SERVER_1 :Сервер #1
+IF_STR_INTRO_TOOLTIP_SERVER_1 :Подключиться к серверу номер 1
+IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME :{WHITE}Не указано имя игрока. Его можно ввести в верхней части окна главного меню игры.

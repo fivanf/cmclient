@@ -6299,3 +6299,8 @@ CM_STR_BUILD_INFO_OVERLAY_ERROR                                 :{RED}{STRING}
 CM_STR_BUILD_INFO_OVERLAY_ERROR_UNKNOWN                         :{RED}Unknown Error!
 
 CM_STR_VEHICLE_INFO_BUILT_VALUE_WITH_ID                         :{LTBLUE}{ENGINE} {BLACK}Built: {LTBLUE}{NUM}{BLACK} Value: {LTBLUE}{CURRENCY_LONG}{BLACK} ID: {LTBLUE}{NUM}
+
+
+IF_STR_INTRO_SERVER_1 :Server #1
+IF_STR_INTRO_TOOLTIP_SERVER_1 :Connect to the server #1
+IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME                               :{WHITE}Your player name has not been set. The name can be set at the top of the main menu window
