@@ -394,29 +394,29 @@ struct GameOptionsWindow : Window {
 	{
 		DropDownList list;
 		switch (widget) {
-			case WID_GO_CURRENCY_DROPDOWN: { // Setup currencies dropdown
-				*selected_index = this->opt->locale.currency;
-				uint64_t disabled = _game_mode == GM_MENU ? 0LL : ~GetMaskOfAllowedCurrencies();
+			// case WID_GO_CURRENCY_DROPDOWN: { // Setup currencies dropdown
+			// 	*selected_index = this->opt->locale.currency;
+			// 	uint64_t disabled = _game_mode == GM_MENU ? 0LL : ~GetMaskOfAllowedCurrencies();
 
-				/* Add non-custom currencies; sorted naturally */
-				for (const CurrencySpec &currency : _currency_specs) {
-					int i = &currency - _currency_specs;
-					if (i == CURRENCY_CUSTOM) continue;
-					if (currency.code.empty()) {
-						list.push_back(std::make_unique<DropDownListStringItem>(currency.name, i, HasBit(disabled, i)));
-					} else {
-						SetDParam(0, currency.name);
-						SetDParamStr(1, currency.code);
-						list.push_back(std::make_unique<DropDownListStringItem>(STR_GAME_OPTIONS_CURRENCY_CODE, i, HasBit(disabled, i)));
-					}
-				}
-				std::sort(list.begin(), list.end(), DropDownListStringItem::NatSortFunc);
+			// 	/* Add non-custom currencies; sorted naturally */
+			// 	for (const CurrencySpec &currency : _currency_specs) {
+			// 		int i = &currency - _currency_specs;
+			// 		if (i == CURRENCY_CUSTOM) continue;
+			// 		if (currency.code.empty()) {
+			// 			list.push_back(std::make_unique<DropDownListStringItem>(currency.name, i, HasBit(disabled, i)));
+			// 		} else {
+			// 			SetDParam(0, currency.name);
+			// 			SetDParamStr(1, currency.code);
+			// 			list.push_back(std::make_unique<DropDownListStringItem>(STR_GAME_OPTIONS_CURRENCY_CODE, i, HasBit(disabled, i)));
+			// 		}
+			// 	}
+			// 	std::sort(list.begin(), list.end(), DropDownListStringItem::NatSortFunc);
 
-				/* Append custom currency at the end */
-				list.push_back(std::make_unique<DropDownListDividerItem>(-1, false)); // separator line
-				list.push_back(std::make_unique<DropDownListStringItem>(STR_GAME_OPTIONS_CURRENCY_CUSTOM, CURRENCY_CUSTOM, HasBit(disabled, CURRENCY_CUSTOM)));
-				break;
-			}
+			// 	/* Append custom currency at the end */
+			// 	list.push_back(std::make_unique<DropDownListDividerItem>(-1, false)); // separator line
+			// 	list.push_back(std::make_unique<DropDownListStringItem>(STR_GAME_OPTIONS_CURRENCY_CUSTOM, CURRENCY_CUSTOM, HasBit(disabled, CURRENCY_CUSTOM)));
+			// 	break;
+			// }
 
 			case WID_GO_AUTOSAVE_DROPDOWN: { // Setup autosave dropdown
 				int index = 0;
@@ -495,17 +495,17 @@ struct GameOptionsWindow : Window {
 	void SetStringParameters(WidgetID widget) const override
 	{
 		switch (widget) {
-			case WID_GO_CURRENCY_DROPDOWN: {
-				const CurrencySpec &currency = _currency_specs[this->opt->locale.currency];
-				if (currency.code.empty()) {
-					SetDParam(0, currency.name);
-				} else {
-					SetDParam(0, STR_GAME_OPTIONS_CURRENCY_CODE);
-					SetDParam(1, currency.name);
-					SetDParamStr(2, currency.code);
-				}
-				break;
-			}
+			// case WID_GO_CURRENCY_DROPDOWN: {
+			// 	const CurrencySpec &currency = _currency_specs[this->opt->locale.currency];
+			// 	if (currency.code.empty()) {
+			// 		SetDParam(0, currency.name);
+			// 	} else {
+			// 		SetDParam(0, STR_GAME_OPTIONS_CURRENCY_CODE);
+			// 		SetDParam(1, currency.name);
+			// 		SetDParamStr(2, currency.code);
+			// 	}
+			// 	break;
+			// }
 			case WID_GO_AUTOSAVE_DROPDOWN: {
 				int index = 0;
 				for (auto &minutes : _autosave_dropdown_to_minutes) {
@@ -649,7 +649,7 @@ struct GameOptionsWindow : Window {
 				break;
 			}
 
-			case WID_GO_CURRENCY_DROPDOWN:
+			// case WID_GO_CURRENCY_DROPDOWN:
 			case WID_GO_AUTOSAVE_DROPDOWN:
 			case WID_GO_LANG_DROPDOWN:
 			case WID_GO_RESOLUTION_DROPDOWN:
@@ -858,7 +858,7 @@ struct GameOptionsWindow : Window {
 				OpenBrowser(BaseMusic::GetUsedSet()->url);
 				break;
 
-			case WID_GO_CURRENCY_DROPDOWN:
+			// case WID_GO_CURRENCY_DROPDOWN:
 			case WID_GO_AUTOSAVE_DROPDOWN:
 			case WID_GO_LANG_DROPDOWN:
 			case WID_GO_RESOLUTION_DROPDOWN:
@@ -894,11 +894,11 @@ struct GameOptionsWindow : Window {
 	void OnDropdownSelect(WidgetID widget, int index) override
 	{
 		switch (widget) {
-			case WID_GO_CURRENCY_DROPDOWN: // Currency
-				if (index == CURRENCY_CUSTOM) ShowCustCurrency();
-				this->opt->locale.currency = index;
-				ReInitAllWindows(false);
-				break;
+			// case WID_GO_CURRENCY_DROPDOWN: // Currency
+			// 	if (index == CURRENCY_CUSTOM) ShowCustCurrency();
+			// 	this->opt->locale.currency = index;
+			// 	ReInitAllWindows(false);
+			// 	break;
 
 			case WID_GO_AUTOSAVE_DROPDOWN: // Autosave options
 				_settings_client.gui.autosave_interval = _autosave_dropdown_to_minutes[index];
@@ -1026,9 +1026,9 @@ static constexpr NWidgetPart _nested_game_options_widgets[] = {
 					NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_GO_AUTOSAVE_DROPDOWN), SetMinimalSize(100, 12), SetDataTip(STR_JUST_STRING, STR_GAME_OPTIONS_AUTOSAVE_DROPDOWN_TOOLTIP), SetFill(1, 0),
 				EndContainer(),
 
-				NWidget(WWT_FRAME, COLOUR_GREY), SetDataTip(STR_GAME_OPTIONS_CURRENCY_UNITS_FRAME, STR_NULL),
-					NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_GO_CURRENCY_DROPDOWN), SetMinimalSize(100, 12), SetDataTip(STR_JUST_STRING2, STR_GAME_OPTIONS_CURRENCY_UNITS_DROPDOWN_TOOLTIP), SetFill(1, 0),
-				EndContainer(),
+				// NWidget(WWT_FRAME, COLOUR_GREY), SetDataTip(STR_GAME_OPTIONS_CURRENCY_UNITS_FRAME, STR_NULL),
+				// 	NWidget(WWT_DROPDOWN, COLOUR_GREY, WID_GO_CURRENCY_DROPDOWN), SetMinimalSize(100, 12), SetDataTip(STR_JUST_STRING2, STR_GAME_OPTIONS_CURRENCY_UNITS_DROPDOWN_TOOLTIP), SetFill(1, 0),
+				// EndContainer(),
 
 				NWidget(NWID_SELECTION, INVALID_COLOUR, WID_GO_SURVEY_SEL),
 					NWidget(WWT_FRAME, COLOUR_GREY), SetDataTip(STR_GAME_OPTIONS_PARTICIPATE_SURVEY_FRAME, STR_NULL), SetPIP(0, WidgetDimensions::unscaled.vsep_sparse, 0),

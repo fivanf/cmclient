@@ -24,49 +24,49 @@ static constexpr TimerGameCalendar::Year MIN_EURO_YEAR = 2000; ///< The earliest
  * for referencing the custom one.
  */
 enum Currencies {
-	CURRENCY_GBP,       ///< British Pound
+	// CURRENCY_GBP,       ///< British Pound
 	CURRENCY_USD,       ///< US Dollar
-	CURRENCY_EUR,       ///< Euro
-	CURRENCY_JPY,       ///< Japanese Yen
-	CURRENCY_ATS,       ///< Austrian Schilling
-	CURRENCY_BEF,       ///< Belgian Franc
-	CURRENCY_CHF,       ///< Swiss Franc
-	CURRENCY_CZK,       ///< Czech Koruna
-	CURRENCY_DEM,       ///< Deutsche Mark
-	CURRENCY_DKK,       ///< Danish Krona
-	CURRENCY_ESP,       ///< Spanish Peseta
-	CURRENCY_FIM,       ///< Finish Markka
-	CURRENCY_FRF,       ///< French Franc
-	CURRENCY_GRD,       ///< Greek Drachma
-	CURRENCY_HUF,       ///< Hungarian Forint
-	CURRENCY_ISK,       ///< Icelandic Krona
-	CURRENCY_ITL,       ///< Italian Lira
-	CURRENCY_NLG,       ///< Dutch Gulden
-	CURRENCY_NOK,       ///< Norwegian Krone
-	CURRENCY_PLN,       ///< Polish Zloty
-	CURRENCY_RON,       ///< Romenian Leu
-	CURRENCY_RUR,       ///< Russian Rouble
-	CURRENCY_SIT,       ///< Slovenian Tolar
-	CURRENCY_SEK,       ///< Swedish Krona
-	CURRENCY_YTL,       ///< Turkish Lira
-	CURRENCY_SKK,       ///< Slovak Kornuna
-	CURRENCY_BRL,       ///< Brazilian Real
-	CURRENCY_EEK,       ///< Estonian Krooni
-	CURRENCY_LTL,       ///< Lithuanian Litas
-	CURRENCY_KRW,       ///< South Korean Won
-	CURRENCY_ZAR,       ///< South African Rand
-	CURRENCY_CUSTOM,    ///< Custom currency
-	CURRENCY_GEL,       ///< Georgian Lari
-	CURRENCY_IRR,       ///< Iranian Rial
-	CURRENCY_RUB,       ///< New Russian Ruble
-	CURRENCY_MXN,       ///< Mexican Peso
-	CURRENCY_NTD,       ///< New Taiwan Dollar
-	CURRENCY_CNY,       ///< Chinese Renminbi
-	CURRENCY_HKD,       ///< Hong Kong Dollar
-	CURRENCY_INR,       ///< Indian Rupee
-	CURRENCY_IDR,       ///< Indonesian Rupiah
-	CURRENCY_MYR,       ///< Malaysian Ringgit
-	CURRENCY_LVL,       ///< Latvian Lats
+	// CURRENCY_EUR,       ///< Euro
+	// CURRENCY_JPY,       ///< Japanese Yen
+	// CURRENCY_ATS,       ///< Austrian Schilling
+	// CURRENCY_BEF,       ///< Belgian Franc
+	// CURRENCY_CHF,       ///< Swiss Franc
+	// CURRENCY_CZK,       ///< Czech Koruna
+	// CURRENCY_DEM,       ///< Deutsche Mark
+	// CURRENCY_DKK,       ///< Danish Krona
+	// CURRENCY_ESP,       ///< Spanish Peseta
+	// CURRENCY_FIM,       ///< Finish Markka
+	// CURRENCY_FRF,       ///< French Franc
+	// CURRENCY_GRD,       ///< Greek Drachma
+	// CURRENCY_HUF,       ///< Hungarian Forint
+	// CURRENCY_ISK,       ///< Icelandic Krona
+	// CURRENCY_ITL,       ///< Italian Lira
+	// CURRENCY_NLG,       ///< Dutch Gulden
+	// CURRENCY_NOK,       ///< Norwegian Krone
+	// CURRENCY_PLN,       ///< Polish Zloty
+	// CURRENCY_RON,       ///< Romenian Leu
+	// CURRENCY_RUR,       ///< Russian Rouble
+	// CURRENCY_SIT,       ///< Slovenian Tolar
+	// CURRENCY_SEK,       ///< Swedish Krona
+	// CURRENCY_YTL,       ///< Turkish Lira
+	// CURRENCY_SKK,       ///< Slovak Kornuna
+	// CURRENCY_BRL,       ///< Brazilian Real
+	// CURRENCY_EEK,       ///< Estonian Krooni
+	// CURRENCY_LTL,       ///< Lithuanian Litas
+	// CURRENCY_KRW,       ///< South Korean Won
+	// CURRENCY_ZAR,       ///< South African Rand
+	// CURRENCY_CUSTOM,    ///< Custom currency
+	// CURRENCY_GEL,       ///< Georgian Lari
+	// CURRENCY_IRR,       ///< Iranian Rial
+	// CURRENCY_RUB,       ///< New Russian Ruble
+	// CURRENCY_MXN,       ///< Mexican Peso
+	// CURRENCY_NTD,       ///< New Taiwan Dollar
+	// CURRENCY_CNY,       ///< Chinese Renminbi
+	// CURRENCY_HKD,       ///< Hong Kong Dollar
+	// CURRENCY_INR,       ///< Indian Rupee
+	// CURRENCY_IDR,       ///< Indonesian Rupiah
+	// CURRENCY_MYR,       ///< Malaysian Ringgit
+	// CURRENCY_LVL,       ///< Latvian Lats
 	CURRENCY_END,       ///< always the last item
 };
 
@@ -101,7 +101,7 @@ struct CurrencySpec {
 extern CurrencySpec _currency_specs[CURRENCY_END];
 
 /* XXX small hack, but makes the rest of the code a bit nicer to read */
-#define _custom_currency (_currency_specs[CURRENCY_CUSTOM])
+#define _custom_currency (_currency_specs[CURRENCY_USD])
 #define _currency ((const CurrencySpec*)&_currency_specs[GetGameSettings().locale.currency])
 
 uint64_t GetMaskOfAllowedCurrencies();
