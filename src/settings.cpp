@@ -88,6 +88,7 @@ static auto &GenericSettingTables()
 		_world_settings,
 		citymania::_settings,
 		citymania::_cmclient_settings,
+		_if_settings,
 	};
 	return _generic_setting_tables;
 }

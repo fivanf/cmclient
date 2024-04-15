@@ -6526,3 +6526,6 @@ CM_STR_VEHICLE_INFO_BUILT_VALUE_WITH_ID                         :{LTBLUE}{ENGINE
 IF_STR_INTRO_SERVER_1 :Сервер #1
 IF_STR_INTRO_TOOLTIP_SERVER_1 :Подключиться к серверу номер 1
 IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME :{WHITE}Не указано имя игрока. Его можно ввести в верхней части окна главного меню игры.
+
+IF_STR_CONFIG_SETTING_CARGO_INCOME_DIVIDER :Делитель прибыли от грузов: {STRING}
+IF_STR_CONFIG_SETTING_CARGO_INCOME_DIVIDER_HELPTEXT :Число на которое делится вся прибыль полученная от доставки грузов.

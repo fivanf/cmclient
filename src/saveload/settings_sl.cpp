@@ -172,6 +172,7 @@ struct PATSChunkHandler : ChunkHandler {
 			_script_settings,
 			_world_settings,
 			citymania::_settings,
+			_if_settings,
 		};
 		static std::vector<SettingVariant> settings_table;
 

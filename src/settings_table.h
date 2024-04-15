@@ -36,6 +36,7 @@ extern SettingTable _world_settings;
 #if defined(_WIN32) && !defined(DEDICATED)
 extern SettingTable _win32_settings;
 #endif /* _WIN32 */
+extern SettingTable _if_settings;
 namespace citymania {
     extern SettingTable _settings;
     extern SettingTable _cmclient_settings;

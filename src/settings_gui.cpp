@@ -2119,6 +2119,7 @@ static SettingsContainer &GetSettingsTree()
 			accounting->Add(new SettingEntry("economy.infrastructure_maintenance"));
 			accounting->Add(new SettingEntry("difficulty.vehicle_costs"));
 			accounting->Add(new SettingEntry("difficulty.construction_cost"));
+			accounting->Add(new SettingEntry("economy.if_cargo_income_divider"));
 		}
 
 		SettingsPage *vehicles = main->Add(new SettingsPage(STR_CONFIG_SETTING_VEHICLES));

@@ -78,6 +78,7 @@ SettingTable _world_settings{ _world_settings_table };
 #if defined(_WIN32) && !defined(DEDICATED)
 SettingTable _win32_settings{ _win32_settings_table };
 #endif /* _WIN32 */
+SettingTable _if_settings{ _if_settings_table };
 namespace citymania {
 	SettingTable _settings{ _citymania_settings_table };
 	SettingTable _cmclient_settings{ _cmclient_settings_table };

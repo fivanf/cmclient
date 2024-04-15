@@ -6304,3 +6304,6 @@ CM_STR_VEHICLE_INFO_BUILT_VALUE_WITH_ID                         :{LTBLUE}{ENGINE
 IF_STR_INTRO_SERVER_1 :Server #1
 IF_STR_INTRO_TOOLTIP_SERVER_1 :Connect to the server #1
 IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME                               :{WHITE}Your player name has not been set. The name can be set at the top of the main menu window
+
+IF_STR_CONFIG_SETTING_CARGO_INCOME_DIVIDER :Cargo income divider: {STRING2}
+IF_STR_CONFIG_SETTING_CARGO_INCOME_DIVIDER_HELPTEXT :A number to divide all cargo income by
