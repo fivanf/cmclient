@@ -515,6 +515,9 @@ static void FormatGenericCurrency(StringBuilder &builder, const CurrencySpec *sp
 		number = -number;
 	}
 
+	Money frac_number = number % 100;
+	number /= 100;
+
 	/* Add prefix part, following symbol_pos specification.
 	 * Here, it can can be either 0 (prefix) or 2 (both prefix and suffix).
 	 * The only remaining value is 1 (suffix), so everything that is not 1 */
@@ -548,6 +551,10 @@ static void FormatGenericCurrency(StringBuilder &builder, const CurrencySpec *sp
 	if (number_str != STR_NULL) {
 		auto tmp_params = ArrayStringParameters<0>();
 		FormatString(builder, GetStringPtr(number_str), tmp_params);
+	} else {
+		builder += '.';
+		builder += '0' + (frac_number / 10);
+		builder += '0' + (frac_number % 10);
 	}
 
 	/* Add suffix part, following symbol_pos specification.
