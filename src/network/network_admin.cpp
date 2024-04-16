@@ -27,6 +27,8 @@
 
 #include "../citymania/cm_commands.hpp"
 
+#include "3rdparty/nlohmann/json.hpp"
+
 #include "../safeguards.h"
 
 
@@ -644,6 +646,23 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 			fmt::println("Setting max loan {} for company {}", (uint64_t)max_loan, company_id);
 			Command<CMD_SET_COMPANY_MAX_LOAN>::Post(STR_ERROR_CAN_T_DO_THIS, company_id, max_loan);
 			citymania::cmd::SetCompanyMaxLoan(company_id, max_loan).as_company(OWNER_DEITY).post();
+			return NETWORK_RECV_STATUS_OKAY;
+		}
+		case 1: {
+			nlohmann::json response;
+			response["request_id"] = request_id;
+			auto &result = response["result"];
+			for (Company *c : Company::Iterate()) {
+				auto company = nlohmann::json::object();
+				company["company_id"] = c->index + 1;
+				company["max_loan"] = static_cast<int64_t>(c->GetMaxLoan());
+				company["current_loan"] = static_cast<int64_t>(c->current_loan);
+				company["balance"] = static_cast<int64_t>(c->money);
+				company["own_funds"] = static_cast<int64_t>(c->money - c->current_loan);
+				// company["value"] = static_cast<int64_t>(c->money - c->current_loan);  // TODO
+				result.push_back(company);
+			}
+			this->SendRpcResponse(response.dump(-1));
 			return NETWORK_RECV_STATUS_OKAY;
 		}
 	}
