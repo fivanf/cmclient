@@ -136,7 +136,7 @@ CommandCost CmdSetCompanyMaxLoan(DoCommandFlag flags, CompanyID company, Money a
 
 	if (flags & DC_EXEC) {
 		/* Round the amount down to a multiple of LOAN_INTERVAL. */
-		if (amount != COMPANY_MAX_LOAN_DEFAULT) amount -= (int64_t)amount % LOAN_INTERVAL;
+		// if (amount != COMPANY_MAX_LOAN_DEFAULT) amount -= (int64_t)amount % LOAN_INTERVAL;
 
 		c->max_loan = amount;
 		InvalidateCompanyWindows(c);
