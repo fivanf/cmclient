@@ -646,7 +646,8 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 			fmt::println("Setting max loan {} for company {}", (uint64_t)max_loan, company_id);
 			Command<CMD_SET_COMPANY_MAX_LOAN>::Post(STR_ERROR_CAN_T_DO_THIS, company_id, max_loan);
 			citymania::cmd::SetCompanyMaxLoan(company_id, max_loan).as_company(OWNER_DEITY).post();
-			return NETWORK_RECV_STATUS_OKAY;
+			// TODO add command callback
+			return this->SendRpcResponse(fmt::format("{{\"result\": {}, \"request_id\": {}}}", (int64_t)max_loan, request_id));
 		}
 		case 1: {
 			nlohmann::json response;
@@ -662,8 +663,7 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 				// company["value"] = static_cast<int64_t>(c->money - c->current_loan);  // TODO
 				result.push_back(company);
 			}
-			this->SendRpcResponse(response.dump(-1));
-			return NETWORK_RECV_STATUS_OKAY;
+			return this->SendRpcResponse(response.dump(-1));
 		}
 	}
 
