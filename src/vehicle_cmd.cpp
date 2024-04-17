@@ -255,6 +255,7 @@ CommandCost CmdSellVehicle(DoCommandFlag flags, VehicleID v_id, bool sell_chain,
 		}
 	}
 
+	ret.ScaleByPercentage(100 - _settings_game.economy.if_vehicle_sale_loss);
 	return ret;
 }
 

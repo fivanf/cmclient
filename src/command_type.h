@@ -80,6 +80,12 @@ public:
 		this->cost *= factor;
 	}
 
+	inline void ScaleByPercentage(int percent)
+	{
+		if (percent == 100) return;
+		this->cost = this->cost * percent / 100;
+	}
+
 	/**
 	 * The costs as made up to this moment
 	 * @return the costs
