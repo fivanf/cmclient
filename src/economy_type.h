@@ -212,9 +212,9 @@ struct PriceBaseSpec {
 };
 
 /** The "steps" in loan size, in British Pounds! */
-static const int LOAN_INTERVAL = 10000;
+static const int LOAN_INTERVAL = 1000000;
 /** The size of loan for a new company, in British Pounds! */
-static const int64_t INITIAL_LOAN = 100000;
+static const int64_t INITIAL_LOAN = 10000000;
 /** The max amount possible to configure for a max loan of a company. */
 static const int64_t MAX_LOAN_LIMIT = 2000000000;
 

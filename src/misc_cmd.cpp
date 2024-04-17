@@ -49,7 +49,7 @@ CommandCost CmdIncreaseLoan(DoCommandFlag flags, LoanCommand cmd, Money amount)
 	switch (cmd) {
 		default: return CMD_ERROR; // Invalid method
 		case LoanCommand::Interval: // Take some extra loan
-			loan = LOAN_INTERVAL;
+			loan = std::min((Money)LOAN_INTERVAL, max_loan - c->current_loan);
 			break;
 		case LoanCommand::Max: // Take a loan as big as possible
 			loan = max_loan - c->current_loan;
@@ -128,7 +128,7 @@ CommandCost CmdSetCompanyMaxLoan(DoCommandFlag flags, CompanyID company, Money a
 {
 	if (_current_company != OWNER_DEITY) return CMD_ERROR;
 	if (amount != COMPANY_MAX_LOAN_DEFAULT) {
-		if (amount < 0 || amount > (Money)MAX_LOAN_LIMIT) return CMD_ERROR;
+		if (amount < 0) return CMD_ERROR;
 	}
 
 	Company *c = Company::GetIfValid(company);
