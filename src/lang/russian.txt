@@ -6530,5 +6530,11 @@ IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME :{WHITE}Не указано имя игро
 IF_STR_CONFIG_SETTING_CARGO_INCOME_DIVIDER :Делитель прибыли от грузов: {STRING}
 IF_STR_CONFIG_SETTING_CARGO_INCOME_DIVIDER_HELPTEXT :Число на которое делится вся прибыль полученная от доставки грузов.
 
-IF_STR_CONFIG_SETTING_VEHICLE_SALE_LOSS :Процент потери при продаже ТС: {STRING2}
+IF_STR_CONFIG_SETTING_VEHICLE_SALE_LOSS :Процент потери при продаже ТС: {STRING}
 IF_STR_CONFIG_SETTING_VEHICLE_SALE_LOSS_HELPTEXT :Постоянный процент от первоначальной стоимости ТС, который вычитается при его продаже, в дополнение к потерям от возраста.
+
+IF_STR_CONFIG_SETTING_INFLATION_INTEREST_RATE :Уровень инфляции: {STRING}
+IF_STR_CONFIG_SETTING_INFLATION_INTEREST_RATE_HELPTEXT :Уровень инфляции.
+IF_STR_CONFIG_SETTING_LOAN_INTEREST_RATE :Процентная ставка: {STRING}
+IF_STR_CONFIG_SETTING_LOAN_INTEREST_RATE_HELPTEXT :Процентная ставка по текущему кредиту (в тысячных долях процента).
+IF_STR_FINANCES_INTEREST_RATE :{WHITE}Процентная ставка: {BLACK}{DECIMAL}%

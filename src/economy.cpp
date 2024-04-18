@@ -847,10 +847,10 @@ static void CompaniesPayInterest()
 		 * taking a loan) we make companies pay interest on negative cash as well,
 		 * except if infinite money is enabled.
 		 */
-		Money yearly_fee = c->current_loan * _economy.interest_rate / 100;
+		Money yearly_fee = c->current_loan * _settings_game.economy.if_loan_interest_rate / 100000;
 		Money available_money = GetAvailableMoney(c->index);
 		if (available_money < 0) {
-			yearly_fee += -available_money * _economy.interest_rate / 100;
+			yearly_fee += -available_money * _settings_game.economy.if_loan_interest_rate / 100000;
 		}
 		Money up_to_previous_month = yearly_fee * TimerGameEconomy::month / 12;
 		Money up_to_this_month = yearly_fee * (TimerGameEconomy::month + 1) / 12;

@@ -43,7 +43,7 @@ static const int DEF_CARGO_SCALE = 100;
 struct Economy {
 	Money max_loan;                       ///< NOSAVE: Maximum possible loan
 	int16_t fluct;                          ///< Economy fluctuation status
-	byte interest_rate;                   ///< Interest
+	uint8_t interest_rate;                   ///< Interest
 	byte infl_amount;                     ///< inflation amount
 	byte infl_amount_pr;                  ///< inflation rate for payment rates
 	uint32_t industry_daily_change_counter; ///< Bits 31-16 are number of industry to be performed, 15-0 are fractional collected daily

@@ -6311,3 +6311,9 @@ IF_STR_CURRENCY_FRACT :{NUM}
 
 IF_STR_CONFIG_SETTING_VEHICLE_SALE_LOSS :Vehicle sale loss percentage: {STRING2}
 IF_STR_CONFIG_SETTING_VEHICLE_SALE_LOSS_HELPTEXT :A fixed percentage of the vehicle's original cost is subtracted when selling it, in addition to the depreciation due to the vehicle's age.
+
+IF_STR_CONFIG_SETTING_INFLATION_INTEREST_RATE                                :Inflation interest rate: {STRING2}
+IF_STR_CONFIG_SETTING_INFLATION_INTEREST_RATE_HELPTEXT                       :Controls the inflation rate
+IF_STR_CONFIG_SETTING_LOAN_INTEREST_RATE                                :Loan interest rate: {STRING2}
+IF_STR_CONFIG_SETTING_LOAN_INTEREST_RATE_HELPTEXT                       :Interest rate on the current loan (in 1/1000ths of %).
+IF_STR_FINANCES_INTEREST_RATE :{WHITE}Loan Interest: {BLACK}{DECIMAL}%

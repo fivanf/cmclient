@@ -317,7 +317,7 @@ static constexpr NWidgetPart _nested_company_finances_widgets[] = {
 			EndContainer(),
 			NWidget(NWID_SELECTION, INVALID_COLOUR, WID_CF_SEL_MAXLOAN),
 				NWidget(NWID_VERTICAL), SetPIPRatio(0, 0, 1), // Max loan information
-					NWidget(WWT_TEXT, COLOUR_GREY, WID_CF_INTEREST_RATE), SetDataTip(STR_FINANCES_INTEREST_RATE, STR_NULL),
+					NWidget(WWT_TEXT, COLOUR_GREY, WID_CF_INTEREST_RATE), SetDataTip(IF_STR_FINANCES_INTEREST_RATE, STR_NULL),
 					NWidget(WWT_TEXT, COLOUR_GREY, WID_CF_MAXLOAN_VALUE), SetDataTip(STR_FINANCES_MAX_LOAN, STR_NULL),
 				EndContainer(),
 			EndContainer(),
@@ -374,7 +374,8 @@ struct CompanyFinancesWindow : Window {
 			}
 
 			case WID_CF_INTEREST_RATE:
-				SetDParam(0, _settings_game.difficulty.initial_interest);
+				SetDParam(0, _settings_game.economy.if_loan_interest_rate);
+				SetDParam(1, 3);
 				break;
 
 			case WID_CF_MAXLOAN_VALUE: {
