@@ -1,4 +1,5 @@
 add_subdirectory(baseset)
+add_subdirectory(newgrf)
 
 add_library(media
         INTERFACE

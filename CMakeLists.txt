@@ -286,6 +286,7 @@ target_link_libraries(openttd
     openttd_lib
     openttd::media
     openttd::basesets
+    openttd::newgrf
 )
 
 target_link_libraries(openttd_test PRIVATE openttd_lib)
