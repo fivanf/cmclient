@@ -73,6 +73,12 @@ This is usable for any OpenTTD servers
 
 
 == CHANGELOG ==
+*** 14.0 ***
+- Fixed graphs with cargo selection.
+- Fixed measurement tooltips.
+- Show the number of hidden vehicles in buy and autoreplace windows.
+- Added a setting to disable activate-on-release behaviour of toolbar dropdown buttons.
+- Added Russian translation.
 
 *** 14.0-RC2 (19 Mar 2024) ***
 - Fix crash in station joining highlight

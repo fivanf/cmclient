@@ -6523,6 +6523,15 @@ CM_STR_BUILD_INFO_OVERLAY_ERROR_UNKNOWN                         :{RED}Неизв
 
 CM_STR_VEHICLE_INFO_BUILT_VALUE_WITH_ID                         :{LTBLUE}{ENGINE} {BLACK}Построен в {LTBLUE}{NUM} г.{BLACK} Стоимость: {LTBLUE}{CURRENCY_LONG}{BLACK} ID: {LTBLUE}{NUM}
 
+CM_STR_CONFIG_SETTING_TOOLBAR_DROPDOWN_CLOSE                       :Активировать выпадающие меню при отпускании клавиши: {STRING}
+CM_STR_CONFIG_SETTING_TOOLBAR_DROPDOWN_CLOSE_HELPTEXT              :Контролирует, активируют ли выпадающие меню основной панели инструментов свою стандартную функцию при отпускании кнопки мыши. Если выключено, то выпадающее меню останется открытым, чтобы можно было сделать выбор.
+
+###length VEHICLE_TYPES
+CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_TRAIN                           :{BLACK}Показать скрытые ({NUM})
+CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_ROAD_VEHICLE                    :{BLACK}Показать скрытые ({NUM})
+CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_SHIP                            :{BLACK}Показать скрытые ({NUM})
+CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_AIRCRAFT                        :{BLACK}Показать скрытые ({NUM})
+
 IF_STR_INTRO_SERVER_1 :Сервер #1
 IF_STR_INTRO_TOOLTIP_SERVER_1 :Подключиться к серверу номер 1
 IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME :{WHITE}Не указано имя игрока. Его можно ввести в верхней части окна главного меню игры.
