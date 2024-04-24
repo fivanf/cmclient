@@ -32,6 +32,7 @@ if (NOT EMSCRIPTEN)
                     ${CMAKE_BINARY_DIR}/ai
                     ${CMAKE_BINARY_DIR}/game
                     ${CMAKE_BINARY_DIR}/data
+                    ${CMAKE_BINARY_DIR}/newgrf
                     ${CMAKE_SOURCE_DIR}/bin/scripts
             DESTINATION ${DATA_DESTINATION_DIR}
             COMPONENT language_files
