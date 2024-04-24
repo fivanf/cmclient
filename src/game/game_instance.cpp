@@ -90,7 +90,7 @@ void GameInstance::Died()
  * @param data Command data as given to Command<>::Post.
  * @param result_data Additional returned data from the command.
  */
-void CcGame(Commands cmd, const CommandCost &result, const CommandDataBuffer &data, CommandDataBuffer result_data)
+void CcGame(Commands cmd, const CommandCost &result, IFRpcRequestID request_id, const CommandDataBuffer &data, CommandDataBuffer result_data)
 {
 	if (Game::GetGameInstance()->DoCommandCallback(result, data, std::move(result_data), cmd)) {
 		Game::GetGameInstance()->Continue();

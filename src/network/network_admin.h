@@ -13,6 +13,7 @@
 #include "network_internal.h"
 #include "core/tcp_listen.h"
 #include "core/tcp_admin.h"
+#include "3rdparty/nlohmann/json.hpp"
 
 extern AdminIndex _redirect_console_to_admin;
 
@@ -71,7 +72,16 @@ public:
 	NetworkRecvStatus SendCmdLogging(ClientID client_id, const CommandPacket &cp);
 	NetworkRecvStatus SendRconEnd(const std::string_view command);
 
-	NetworkRecvStatus SendRpcResponse(std::string_view json_data);
+	NetworkRecvStatus SendRpcErrorData(IFRpcRequestID request_id, std::string_view error);
+	template <typename... Args>
+	NetworkRecvStatus SendRpcError(IFRpcRequestID request_id, fmt::format_string<Args...> format, Args&& ... args) {
+	    return this->SendRpcError(request_id, fmt::format(format, std::forward<Args>(args)...));
+	};
+	NetworkRecvStatus SendRpcError(IFRpcRequestID request_id, std::string_view error) {
+		return this->SendRpcErrorData(request_id, error);
+	};
+
+	NetworkRecvStatus SendRpcResponse(IFRpcRequestID request_id, const nlohmann::json &data);
 
 	static void Send();
 	static void AcceptConnection(SOCKET s, const NetworkAddress &address);

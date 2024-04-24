@@ -35,6 +35,7 @@ public:
     CompanyID company = INVALID_COMPANY;
     StringID error = (StringID)0;
     CommandCallback callback = nullptr;
+    IFRpcRequestID request_id = 0;
 
     Command() {}
     virtual ~Command() {}
@@ -90,6 +91,11 @@ public:
 
     Command &with_callback(CommandCallback callback) {
         this->callback = callback;
+        return *this;
+    }
+
+    Command &with_request_id(IFRpcRequestID request_id) {
+        this->request_id = request_id;
         return *this;
     }
 };

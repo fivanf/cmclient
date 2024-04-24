@@ -27,8 +27,6 @@
 
 #include "../citymania/cm_commands.hpp"
 
-#include "3rdparty/nlohmann/json.hpp"
-
 #include "../safeguards.h"
 
 
@@ -629,30 +627,51 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::SendCmdLogging(ClientID clien
 	return NETWORK_RECV_STATUS_OKAY;
 }
 
+void CcRpc(Commands, const CommandCost &result, IFRpcRequestID request_id, const CommandDataBuffer&, CommandDataBuffer)
+{
+	if (result.Succeeded()) {
+		for (ServerNetworkAdminSocketHandler *as : ServerNetworkAdminSocketHandler::IterateActive()) {
+			as->SendRpcResponse(request_id, nlohmann::json(true));
+		}
+	} else {
+		std::string message = GetString(result.GetErrorMessage());
+		for (ServerNetworkAdminSocketHandler *as : ServerNetworkAdminSocketHandler::IterateActive()) {
+			as->SendRpcError(request_id, message);
+		}
+	}
+}
+
+
 NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Packet &p)
 {
 	if (this->status == ADMIN_STATUS_INACTIVE) return this->SendError(NETWORK_ERROR_NOT_EXPECTED);
 	uint32_t request_id = p.Recv_uint32();
+	if (request_id == 0) {
+		return this->SendRpcError(request_id, "Invalid request ID");
+	}
 	uint32_t command = p.Recv_uint32();
 	uint64_t arg1 = p.Recv_uint64();
 	uint64_t arg2 = p.Recv_uint64();
+	Debug(net, 1, "Rpc request: id={} command={} arg1={} arg2={}", request_id, command, arg1, arg2);
 	switch (command) {
 		case 0: { // max_loan
 			auto company_id = (CompanyID)(arg1 - 1);
 			auto max_loan = (Money)arg2;
 			if (!Company::IsValidID(company_id)) {
-				return this->SendRpcResponse(fmt::format("{{\"error\": \"Invalid company\", \"request_id\": {}}}", request_id));
+				return this->SendRpcError(request_id, "Invalid company {}.", arg1);
 			}
 			fmt::println("Setting max loan {} for company {}", (uint64_t)max_loan, company_id);
-			Command<CMD_SET_COMPANY_MAX_LOAN>::Post(STR_ERROR_CAN_T_DO_THIS, company_id, max_loan);
-			citymania::cmd::SetCompanyMaxLoan(company_id, max_loan).as_company(OWNER_DEITY).post();
-			// TODO add command callback
-			return this->SendRpcResponse(fmt::format("{{\"result\": {}, \"request_id\": {}}}", (int64_t)max_loan, request_id));
+			auto res = citymania::cmd::SetCompanyMaxLoan(company_id, max_loan)
+				.as_company(OWNER_DEITY)
+				.with_request_id(request_id)
+				.post(&CcRpc);
+			if (!res)
+				return this->SendRpcError(request_id, "Command failed pre-queue testing.");
 		}
 		case 1: {
-			nlohmann::json response;
-			response["request_id"] = request_id;
-			auto &result = response["result"];
+			nlohmann::json result;
+			// response["request_id"] = request_id;
+			// auto &result = response["result"];
 			for (Company *c : Company::Iterate()) {
 				auto company = nlohmann::json::object();
 				company["company_id"] = c->index + 1;
@@ -663,17 +682,36 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 				// company["value"] = static_cast<int64_t>(c->money - c->current_loan);  // TODO
 				result.push_back(company);
 			}
-			return this->SendRpcResponse(response.dump(-1));
+			// return this->SendRpcResponse(response.dump(-1));
+			return this->SendRpcResponse(request_id, result);
 		}
 	}
 
 	return NETWORK_RECV_STATUS_OKAY;
 }
 
-NetworkRecvStatus ServerNetworkAdminSocketHandler::SendRpcResponse(std::string_view json_data)
+NetworkRecvStatus ServerNetworkAdminSocketHandler::SendRpcErrorData(IFRpcRequestID request_id, std::string_view error)
 {
+	nlohmann::json response;
+	response["request_id"] = request_id.base();
+	response["error"] = error;
 	auto p = std::make_unique<Packet>(IF_ADMIN_PACKET_SERVER_RPC_RESPONSE);
-	p->Send_string(json_data);
+	auto json_str = response.dump(-1);
+	p->Send_string(json_str);
+	Debug(net, 1, "Rpc error: {}", json_str);
+	this->SendPacket(std::move(p));
+	return NETWORK_RECV_STATUS_OKAY;
+}
+
+NetworkRecvStatus ServerNetworkAdminSocketHandler::SendRpcResponse(IFRpcRequestID request_id, const nlohmann::json &data)
+{
+	nlohmann::json response;
+	response["request_id"] = request_id.base();
+	response["result"] = data;
+	auto p = std::make_unique<Packet>(IF_ADMIN_PACKET_SERVER_RPC_RESPONSE);
+	auto json_str = response.dump(-1);
+	Debug(net, 1, "Rpc response: {}", json_str);
+	p->Send_string(json_str);
 	this->SendPacket(std::move(p));
 	return NETWORK_RECV_STATUS_OKAY;
 }

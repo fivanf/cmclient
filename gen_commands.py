@@ -8,7 +8,7 @@ RX_COMMAND = re.compile(r'(?P<returns>CommandCost|std::tuple<CommandCost, [^>]*>
 RX_DEF_TRAIT = re.compile(r'DEF_CMD_TRAIT\((?P<constant>\w+),\s+(?P<function>\w+),\s+(?P<flags>[^,]*),\s+(?P<category>\w+)\)')
 RX_ARG = re.compile(r'(?P<type>(:?const |)[\w:]* &?)(?P<name>\w*)')
 RX_CALLBACK = re.compile(r'void\s+(?P<name>Cc\w+)\(Commands')
-RX_CALLBACK_REF = re.compile(r'CommandCallback\s+(?P<name>Cc\w+);')
+RX_CALLBACK_REF = re.compile(r'CommandCallback(?:Data|)\s+(?P<name>Cc\w+);')
 RX_CAMEL_TO_SNAKE = re.compile(r'(?<!^)(?=[A-Z])')
 RX_CMD_CONSTANT = re.compile(r'CMD_[\w_]+')
 
@@ -21,6 +21,7 @@ FILES = [
     'src/station_cmd.h',
     'src/town_cmd.h',
     'src/tunnelbridge_cmd.h',
+    'src/script/script_cmd.h',
 ]
 
 BASE_DIR = Path(__file__).parent
@@ -96,15 +97,18 @@ def parse_commands():
         command_ids[cmd] = cid
         cid += 1
 
-    for f in glob.glob(str(BASE_DIR / 'src' / '*_cmd.h')):
-    # for f in glob.glob(str(BASE_DIR / 'src' / 'group_cmd.h')):
+    for f in glob.glob(str(BASE_DIR / 'src' / '*_cmd.h')) + glob.glob(str(BASE_DIR / 'src' / 'script' / '*_cmd.h')):
         includes.append(Path(f).name)
         data = open(f).read()
         traits = {}
         for constant, name, flags, category in RX_DEF_TRAIT.findall(data):
             traits[name] = constant, flags, category
-        callbacks.extend(RX_CALLBACK.findall(data))
-        callbacks.extend(RX_CALLBACK_REF.findall(data))
+        rxcb = RX_CALLBACK.findall(data)
+        print(f, 'Callbacks', rxcb)
+        callbacks.extend(rxcb)
+        rxcbref = RX_CALLBACK_REF.findall(data)
+        print(f, 'Callback refs', rxcbref)
+        callbacks.extend(rxcbref)
         for returns, name, args_str in RX_COMMAND.findall(data):
             trait = traits.get(name)
             if not trait:
@@ -190,8 +194,8 @@ static size_t FindCallbackIndex(::CommandCallback *callback) {
 }
 
 template <Commands Tcmd, size_t Tcb, typename... Targs>
-bool _DoPost(StringID err_msg, Targs... args) {
-    return ::Command<Tcmd>::Post(err_msg, std::get<Tcb>(_callback_tuple), std::forward<Targs>(args)...);
+bool _DoPost(IFRpcRequestID request_id, StringID err_msg, Targs... args) {
+    return ::Command<Tcmd>::Post(request_id, err_msg, std::get<Tcb>(_callback_tuple), std::forward<Targs>(args)...);
 }
 template <Commands Tcmd, size_t Tcb, typename... Targs>
 constexpr auto MakeCallback() noexcept {
@@ -210,7 +214,7 @@ constexpr auto MakeCallback() noexcept {
 template <Commands Tcmd, typename... Targs, size_t... i>
 inline constexpr auto MakeDispatchTableHelper(std::index_sequence<i...>) noexcept
 {
-    return std::array<bool (*)(StringID err_msg, Targs...), sizeof...(i)>{MakeCallback<Tcmd, i, Targs...>()... };
+    return std::array<bool (*)(IFRpcRequestID request_id, StringID err_msg, Targs...), sizeof...(i)>{MakeCallback<Tcmd, i, Targs...>()... };
 }
 
 template <Commands Tcmd, typename... Targs>
@@ -284,6 +288,8 @@ def run():
         for fn in FILES:
             f.write(f'#include "../../{fn}"\n')
         f.write(
+            'extern CommandCallbackData CcRpc;\n'
+            '\n'
             'namespace citymania {\n'
             'namespace cmd {\n\n'
         )
@@ -294,6 +300,7 @@ def run():
             ' */\n'
             'static constexpr auto _callback_tuple = std::make_tuple(\n'
             '    (::CommandCallback *)nullptr, // Make sure this is actually a pointer-to-function.\n'
+            '    &CcRpc,\n'
         )
         for i, cb in enumerate(callbacks):
             comma = ',' if i != len(callbacks) - 1 else ''
@@ -318,7 +325,7 @@ def run():
                 f'Commands {name}::get_command() {{ return {constant}; }}\n'
                 f'static constexpr auto _{name}_dispatch = MakeDispatchTable<{constant}{sep_args_type_list}>();\n'
                 f'bool {name}::_post(::CommandCallback *callback) {{\n'
-                f'    return _{name}_dispatch[FindCallbackIndex(callback)](this->error{sep_this_args_list});\n'
+                f'    return _{name}_dispatch[FindCallbackIndex(callback)](this->request_id, this->error{sep_this_args_list});\n'
                 '}\n'
                 f'CommandCost {name}::_do(DoCommandFlag flags) {{\n'
                 f'    return {cost_getter}(::Command<{constant}>::Do(flags, {test_args_list}));\n'

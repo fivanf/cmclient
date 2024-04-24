@@ -116,6 +116,7 @@ struct CommandPacket {
 	StringID err_msg;          ///< string ID of error message to use.
 	CommandCallback *callback; ///< any callback function executed upon successful completion of the command.
 	CommandDataBuffer data;    ///< command parameters.
+	IFRpcRequestID request_id;
 };
 
 void NetworkDistributeCommands();

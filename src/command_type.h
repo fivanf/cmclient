@@ -18,6 +18,8 @@
 
 struct GRFFile;
 
+using IFRpcRequestID = StrongType::Typedef<uint32_t, struct IFRpcRequestIDTag, StrongType::Compare, StrongType::Integer>;
+
 /**
  * Common return value for all commands. Wraps the cost and
  * a possible error message/state together.
@@ -502,6 +504,6 @@ typedef void CommandCallback(Commands cmd, const CommandCost &result, TileIndex 
  * @param result_data Additional returned data from the command
  * @see CommandProc
  */
-typedef void CommandCallbackData(Commands cmd, const CommandCost &result, const CommandDataBuffer &data, CommandDataBuffer result_data);
+typedef void CommandCallbackData(Commands cmd, const CommandCost &result, IFRpcRequestID request_id, const CommandDataBuffer &data, CommandDataBuffer result_data);
 
 #endif /* COMMAND_TYPE_H */

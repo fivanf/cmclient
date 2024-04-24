@@ -20,7 +20,6 @@
 #include "core/random_func.hpp"  // CM for _random debug print
 extern uint32 _frame_counter;
 
-
 struct CommandPacket;
 namespace citymania {
 	extern CommandCost _command_execute_cost;
@@ -46,7 +45,7 @@ static const CommandCost CMD_ERROR = CommandCost(INVALID_STRING_ID);
  */
 #define return_cmd_error(errcode) return CommandCost(errcode);
 
-void NetworkSendCommand(Commands cmd, StringID err_message, CommandCallback *callback, CompanyID company, const CommandDataBuffer &cmd_data);
+void NetworkSendCommand(IFRpcRequestID request_id, Commands cmd, StringID err_message, CommandCallback *callback, CompanyID company, const CommandDataBuffer &cmd_data);
 
 bool IsValidCommand(Commands cmd);
 CommandFlags GetCommandFlags(Commands cmd);
@@ -216,7 +215,14 @@ public:
 	template <typename Tcallback>
 	static bool Post(StringID err_message, Tcallback *callback, Targs... args)
 	{
-		return InternalPost(err_message, callback, true, false, std::forward_as_tuple(args...));
+		// return InternalPost(err_message, callback, true, false, std::forward_as_tuple(args...));
+		return Post<Tcallback>(IFRpcRequestID{0}, err_message, callback, std::forward<Targs>(args)...);
+	}
+
+	template <typename Tcallback>
+	static bool Post(IFRpcRequestID request_id, StringID err_message, Tcallback *callback, Targs... args)
+	{
+		return InternalPost(request_id, err_message, callback, true, false, std::forward_as_tuple(args...));
 	}
 
 	/**
@@ -228,9 +234,9 @@ public:
 	 * @return \c true if the command succeeded, else \c false.
 	 */
 	template <typename Tcallback>
-	static bool PostFromNet(StringID err_message, Tcallback *callback, bool my_cmd, std::tuple<Targs...> args)
+	static bool PostFromNet(IFRpcRequestID request_id, StringID err_message, Tcallback *callback, bool my_cmd, std::tuple<Targs...> args)
 	{
-		return InternalPost(err_message, callback, my_cmd, true, std::move(args));
+		return InternalPost(request_id, err_message, callback, my_cmd, true, std::move(args));
 	}
 
 	/**
@@ -244,7 +250,7 @@ public:
 	{
 		auto args_tuple = std::forward_as_tuple(args...);
 
-		::NetworkSendCommand(Tcmd, err_message, nullptr, company, EndianBufferWriter<CommandDataBuffer>::FromValue(args_tuple));
+		::NetworkSendCommand(0, Tcmd, err_message, nullptr, company, EndianBufferWriter<CommandDataBuffer>::FromValue(args_tuple));
 	}
 
 	/**
@@ -260,7 +266,7 @@ public:
 	template <typename Tcallback>
 	static Tret Unsafe(StringID err_message, Tcallback *callback, bool my_cmd, bool estimate_only, TileIndex location, std::tuple<Targs...> args)
 	{
-		return Execute(err_message, reinterpret_cast<CommandCallback *>(callback), my_cmd, estimate_only, false, location, std::move(args));
+		return Execute(0, err_message, reinterpret_cast<CommandCallback *>(callback), my_cmd, estimate_only, false, location, std::move(args));
 	}
 
 protected:
@@ -288,7 +294,7 @@ protected:
 	}
 
 	template <typename Tcallback>
-	static bool InternalPost(StringID err_message, Tcallback *callback, bool my_cmd, bool network_command, std::tuple<Targs...> args)
+	static bool InternalPost(IFRpcRequestID request_id, StringID err_message, Tcallback *callback, bool my_cmd, bool network_command, std::tuple<Targs...> args)
 	{
 		/* Where to show the message? */
 		TileIndex tile{};
@@ -296,11 +302,11 @@ protected:
 			tile = std::get<0>(args);
 		}
 
-		return InternalPost(err_message, callback, my_cmd, network_command, tile, std::move(args));
+		return InternalPost(request_id, err_message, callback, my_cmd, network_command, tile, std::move(args));
 	}
 
 	template <typename Tcallback>
-	static bool InternalPost(StringID err_message, Tcallback *callback, bool my_cmd, bool network_command, TileIndex tile, std::tuple<Targs...> args)
+	static bool InternalPost(IFRpcRequestID request_id, StringID err_message, Tcallback *callback, bool my_cmd, bool network_command, TileIndex tile, std::tuple<Targs...> args)
 	{
 		/* Do not even think about executing out-of-bounds tile-commands. */
 		if (tile != 0 && (tile >= Map::Size() || (!IsValidTile(tile) && (GetCommandFlags<Tcmd>() & CMD_ALL_TILES) == 0))) return false;
@@ -311,7 +317,8 @@ protected:
 		/* Only set client IDs when the command does not come from the network. */
 		if (!network_command && GetCommandFlags<Tcmd>() & CMD_CLIENT_ID) SetClientIds(args, std::index_sequence_for<Targs...>{});
 
-		Tret res = Execute(err_message, reinterpret_cast<CommandCallback *>(callback), my_cmd, estimate_only, network_command, tile, args);
+
+		Tret res = Execute(request_id, err_message, reinterpret_cast<CommandCallback *>(callback), my_cmd, estimate_only, network_command, tile, args);
 		InternalPostResult(ExtractCommandCost(res), tile, estimate_only, only_sending, err_message, my_cmd);
 		citymania::_command_execute_cost = ExtractCommandCost(res);
 
@@ -322,9 +329,9 @@ protected:
 			} else if constexpr (std::is_same_v<Tcallback, CommandCallbackData>) {
 				/* Generic callback that takes packed arguments as a buffer. */
 				if constexpr (std::is_same_v<Tret, CommandCost>) {
-					callback(Tcmd, ExtractCommandCost(res), EndianBufferWriter<CommandDataBuffer>::FromValue(args), {});
+					callback(Tcmd, ExtractCommandCost(res), request_id, EndianBufferWriter<CommandDataBuffer>::FromValue(args), {});
 				} else {
-					callback(Tcmd, ExtractCommandCost(res), EndianBufferWriter<CommandDataBuffer>::FromValue(args), EndianBufferWriter<CommandDataBuffer>::FromValue(RemoveFirstTupleElement(res)));
+					callback(Tcmd, ExtractCommandCost(res), request_id, EndianBufferWriter<CommandDataBuffer>::FromValue(args), EndianBufferWriter<CommandDataBuffer>::FromValue(RemoveFirstTupleElement(res)));
 				}
 			} else if constexpr (!std::is_same_v<Tret, CommandCost> && std::is_same_v<Tcallback *, typename CommandTraits<Tcmd>::RetCallbackProc>) {
 				std::apply(callback, std::tuple_cat(std::make_tuple(Tcmd), res));
@@ -371,7 +378,7 @@ protected:
 		}
 	}
 
-	static Tret Execute(StringID err_message, CommandCallback *callback, bool, bool estimate_only, bool network_command, TileIndex tile, std::tuple<Targs...> args)
+	static Tret Execute(IFRpcRequestID request_id, StringID err_message, CommandCallback *callback, bool, bool estimate_only, bool network_command, TileIndex tile, std::tuple<Targs...> args)
 	{
 		/* Prevent recursion; it gives a mess over the network */
 		RecursiveCommandCounter counter{};
@@ -405,7 +412,7 @@ protected:
 		/* If we are in network, and the command is not from the network
 		 * send it to the command-queue and abort execution. */
 		if (send_net) {
-			::NetworkSendCommand(Tcmd, err_message, callback, _current_company, EndianBufferWriter<CommandDataBuffer>::FromValue(args));
+			::NetworkSendCommand(request_id, Tcmd, err_message, callback, _current_company, EndianBufferWriter<CommandDataBuffer>::FromValue(args));
 			cur_company.Restore();
 
 			/* Don't return anything special here; no error, no costs.
@@ -488,7 +495,14 @@ struct CommandHelper<Tcmd, Tret(*)(DoCommandFlag, Targs...), false> : CommandHel
 	template <typename Tcallback>
 	static inline bool Post(StringID err_message, Tcallback *callback, TileIndex location, Targs... args)
 	{
-		return CommandHelper<Tcmd, Tret(*)(DoCommandFlag, Targs...), true>::InternalPost(err_message, callback, true, false, location, std::forward_as_tuple(args...));
+		// return CommandHelper<Tcmd, Tret(*)(DoCommandFlag, Targs...), true>::InternalPost(0, err_message, callback, true, false, location, std::forward_as_tuple(args...));
+		return Post<Tcallback>((IFRpcRequestID)0, err_message, callback, location, std::forward<Targs>(args)...);
+	}
+
+	template <typename Tcallback>
+	static inline bool Post(IFRpcRequestID request_id, StringID err_message, Tcallback *callback, TileIndex location, Targs... args)
+	{
+		return CommandHelper<Tcmd, Tret(*)(DoCommandFlag, Targs...), true>::InternalPost(request_id, err_message, callback, true, false, location, std::forward_as_tuple(args...));
 	}
 };
 

@@ -103,7 +103,7 @@ ScriptInfo *AIInstance::FindLibrary(const std::string &library, int version)
  * @param data Command data as given to Command<>::Post.
  * @param result_data Additional returned data from the command.
  */
-void CcAI(Commands cmd, const CommandCost &result, const CommandDataBuffer &data, CommandDataBuffer result_data)
+void CcAI(Commands cmd, const CommandCost &result, IFRpcRequestID request_id, const CommandDataBuffer &data, CommandDataBuffer result_data)
 {
 	/*
 	 * The company might not exist anymore. Check for this.

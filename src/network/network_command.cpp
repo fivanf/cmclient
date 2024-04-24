@@ -56,6 +56,8 @@
 
 #include "../safeguards.h"
 
+extern CommandCallbackData CcRpc;
+
 /** Typed list of all possible callbacks. */
 static constexpr auto _callback_tuple = std::make_tuple(
 	(CommandCallback *)nullptr, // Make sure this is actually a pointer-to-function.
@@ -84,7 +86,8 @@ static constexpr auto _callback_tuple = std::make_tuple(
 	&CcBuildIndustry,
 	&CcStartStopVehicle,
 	&CcGame,
-	&CcAddVehicleNewGroup
+	&CcAddVehicleNewGroup,
+	&CcRpc
 );
 
 #ifdef SILENCE_GCC_FUNCTION_POINTER_CAST
@@ -195,7 +198,7 @@ static size_t FindCallbackIndex(CommandCallback *callback)
  * @param company The company that wants to send the command
  * @param cmd_data The command proc arguments.
  */
-void NetworkSendCommand(Commands cmd, StringID err_message, CommandCallback *callback, CompanyID company, const CommandDataBuffer &cmd_data)
+void NetworkSendCommand(IFRpcRequestID request_id, Commands cmd, StringID err_message, CommandCallback *callback, CompanyID company, const CommandDataBuffer &cmd_data)
 {
 	CommandPacket c;
 	c.company  = company;
@@ -203,6 +206,7 @@ void NetworkSendCommand(Commands cmd, StringID err_message, CommandCallback *cal
 	c.err_msg  = err_message;
 	c.callback = callback;
 	c.data     = cmd_data;
+	c.request_id = request_id;
 
 	if (_network_server) {
 		/* If we are the server, we queue the command in our 'special' queue.
@@ -495,6 +499,6 @@ void UnpackNetworkCommand(const CommandPacket &cp)
 	citymania::BeforeNetworkCommandExecution(cp);
 	auto args = EndianBufferReader::ToValue<typename CommandTraits<Tcmd>::Args>(cp.data);
 	Debug(misc, 5, "UnpackNetworkCommand cmd={} my={}", GetCommandName(cp.cmd), cp.my_cmd);
-	Command<Tcmd>::PostFromNet(cp.err_msg, std::get<Tcb>(_callback_tuple), cp.my_cmd, args);
+	Command<Tcmd>::PostFromNet(cp.request_id, cp.err_msg, std::get<Tcb>(_callback_tuple), cp.my_cmd, args);
 	citymania::AfterNetworkCommandExecution(cp);
 }
