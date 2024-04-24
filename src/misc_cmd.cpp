@@ -254,3 +254,21 @@ CommandCost CmdChangeBankBalance(DoCommandFlag flags, TileIndex tile, Money delt
 	CommandCost zero_cost(expenses_type, (Money)0);
 	return zero_cost;
 }
+
+void SubtractMoneyFromAnyCompany(Company *c, const CommandCost &cost);
+
+CommandCost CmdReduceCompanyBalance(DoCommandFlag flags, CompanyID company, Money amount)
+{
+	Company *c = Company::GetIfValid(company);
+	if (c == nullptr) return CMD_ERROR;
+	if (_current_company != OWNER_DEITY) return CMD_ERROR;
+	if (c->money - c->current_loan < amount) return CMD_ERROR;
+
+	if (flags & DC_EXEC) {
+		SubtractMoneyFromAnyCompany(c, CommandCost(EXPENSES_OTHER, amount));
+	}
+
+	/* This command doesn't cost anything for deity. */
+	CommandCost zero_cost(EXPENSES_OTHER, (Money)0);
+	return zero_cost;
+}

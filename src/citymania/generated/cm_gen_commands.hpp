@@ -1943,6 +1943,20 @@ public:
     Commands get_command() override;
 };
 
+class ReduceCompanyBalance: public Command {
+public:
+    CompanyID company;
+    Money amount;
+
+    ReduceCompanyBalance(CompanyID company, Money amount)
+        :company{company}, amount{amount} {}
+    ~ReduceCompanyBalance() override {}
+
+    bool _post(::CommandCallback * callback) override;
+    CommandCost _do(DoCommandFlag flags) override;
+    Commands get_command() override;
+};
+
 class WantEnginePreview: public Command {
 public:
     EngineID engine_id;

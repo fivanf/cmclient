@@ -264,7 +264,7 @@ bool CheckCompanyHasMoney(CommandCost &cost)
  * @param c Company to pay the bill.
  * @param cost Money to pay.
  */
-static void SubtractMoneyFromAnyCompany(Company *c, const CommandCost &cost)
+/* IF static */ void SubtractMoneyFromAnyCompany(Company *c, const CommandCost &cost)
 {
 	if (cost.GetCost() == 0) return;
 	assert(cost.GetExpensesType() != INVALID_EXPENSES);

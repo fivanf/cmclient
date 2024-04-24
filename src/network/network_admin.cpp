@@ -652,26 +652,24 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 	uint32_t command = p.Recv_uint32();
 	uint64_t arg1 = p.Recv_uint64();
 	uint64_t arg2 = p.Recv_uint64();
+	std::string text = p.Recv_string(NETWORK_PASSWORD_LENGTH);
 	Debug(net, 1, "Rpc request: id={} command={} arg1={} arg2={}", request_id, command, arg1, arg2);
 	switch (command) {
-		case 0: { // max_loan
+		case 0: {  // set_company_max_loan
 			auto company_id = (CompanyID)(arg1 - 1);
 			auto max_loan = (Money)arg2;
 			if (!Company::IsValidID(company_id)) {
-				return this->SendRpcError(request_id, "Invalid company {}.", arg1);
+				return this->SendRpcError(request_id, "Invalid company {}", arg1);
 			}
 			fmt::println("Setting max loan {} for company {}", (uint64_t)max_loan, company_id);
 			auto res = citymania::cmd::SetCompanyMaxLoan(company_id, max_loan)
 				.as_company(OWNER_DEITY)
 				.with_request_id(request_id)
 				.post(&CcRpc);
-			if (!res)
-				return this->SendRpcError(request_id, "Command failed pre-queue testing.");
+			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
 		}
-		case 1: {
+		case 1: {  // get_companies_info
 			nlohmann::json result;
-			// response["request_id"] = request_id;
-			// auto &result = response["result"];
 			for (Company *c : Company::Iterate()) {
 				auto company = nlohmann::json::object();
 				company["company_id"] = c->index + 1;
@@ -682,8 +680,21 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 				// company["value"] = static_cast<int64_t>(c->money - c->current_loan);  // TODO
 				result.push_back(company);
 			}
-			// return this->SendRpcResponse(response.dump(-1));
 			return this->SendRpcResponse(request_id, result);
+		}
+		case 2: {  // reduce_company_balance
+			auto company_id = (CompanyID)(arg1 - 1);
+			auto amount = (Money)arg2;
+			auto c = Company::GetIfValid(company_id);
+			if (c == nullptr)
+				return this->SendRpcError(request_id, "Invalid company {}", arg1);
+			if (c->money - c->current_loan < amount)
+				return this->SendRpcError(request_id, "Insufficient own funds ({} < {})", static_cast<int64_t>(c->money - c->current_loan), static_cast<int64_t>(amount));
+			auto res = citymania::cmd::ReduceCompanyBalance(company_id, amount)
+				.as_company(OWNER_DEITY)
+				.with_request_id(request_id)
+				.post(&CcRpc);
+			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
 		}
 	}
 

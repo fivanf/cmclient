@@ -1227,6 +1227,15 @@ CommandCost Pause::_do(DoCommandFlag flags) {
     return (::Command<CMD_PAUSE>::Do(flags, mode, pause));
 }
 
+Commands ReduceCompanyBalance::get_command() { return CMD_REDUCE_COMPANY_BALANCE; }
+static constexpr auto _ReduceCompanyBalance_dispatch = MakeDispatchTable<CMD_REDUCE_COMPANY_BALANCE, CompanyID, Money>();
+bool ReduceCompanyBalance::_post(::CommandCallback *callback) {
+    return _ReduceCompanyBalance_dispatch[FindCallbackIndex(callback)](this->request_id, this->error, this->company, this->amount);
+}
+CommandCost ReduceCompanyBalance::_do(DoCommandFlag flags) {
+    return (::Command<CMD_REDUCE_COMPANY_BALANCE>::Do(flags, company, amount));
+}
+
 Commands WantEnginePreview::get_command() { return CMD_WANT_ENGINE_PREVIEW; }
 static constexpr auto _WantEnginePreview_dispatch = MakeDispatchTable<CMD_WANT_ENGINE_PREVIEW, EngineID>();
 bool WantEnginePreview::_post(::CommandCallback *callback) {
