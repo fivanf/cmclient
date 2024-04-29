@@ -317,10 +317,12 @@ def run():
             test_args_list = ', '.join(f'{an}' for _, an in cmd['do_args'])
             cost_getter = '' if cmd['result_type'] is None else 'std::get<0>'
             sep_args_list = sep_args_type_list = sep_this_args_list = ''
+            sep_test_args_list = ''
             if args_list:
                 sep_args_list = ', ' + args_list
                 sep_args_type_list = ', ' + args_type_list
                 sep_this_args_list = ', ' + this_args_list
+                sep_test_args_list = ', ' + test_args_list
             f.write(
                 f'Commands {name}::get_command() {{ return {constant}; }}\n'
                 f'static constexpr auto _{name}_dispatch = MakeDispatchTable<{constant}{sep_args_type_list}>();\n'
@@ -328,7 +330,7 @@ def run():
                 f'    return _{name}_dispatch[FindCallbackIndex(callback)](this->request_id, this->error{sep_this_args_list});\n'
                 '}\n'
                 f'CommandCost {name}::_do(DoCommandFlag flags) {{\n'
-                f'    return {cost_getter}(::Command<{constant}>::Do(flags, {test_args_list}));\n'
+                f'    return {cost_getter}(::Command<{constant}>::Do(flags{sep_test_args_list}));\n'
                 '}\n'
             )
             f.write('\n')

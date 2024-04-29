@@ -24,11 +24,16 @@ CommandCost CmdRenamePresident(DoCommandFlag flags, const std::string &text);
 CommandCost CmdSetCompanyManagerFace(DoCommandFlag flags, CompanyManagerFace cmf);
 CommandCost CmdSetCompanyColour(DoCommandFlag flags, LiveryScheme scheme, bool primary, Colours colour);
 
+CommandCost CmdCompanyReset(DoCommandFlag flags, bool redundant);
+CommandCost CmdCompanyClose(DoCommandFlag flags, bool redundant);
+
 DEF_CMD_TRAIT(CMD_COMPANY_CTRL,             CmdCompanyCtrl,           CMD_SPECTATOR | CMD_CLIENT_ID | CMD_NO_EST, CMDT_SERVER_SETTING)
 DEF_CMD_TRAIT(CMD_GIVE_MONEY,               CmdGiveMoney,             0,                                          CMDT_MONEY_MANAGEMENT)
 DEF_CMD_TRAIT(CMD_RENAME_COMPANY,           CmdRenameCompany,         0,                                          CMDT_OTHER_MANAGEMENT)
 DEF_CMD_TRAIT(CMD_RENAME_PRESIDENT,         CmdRenamePresident,       0,                                          CMDT_OTHER_MANAGEMENT)
 DEF_CMD_TRAIT(CMD_SET_COMPANY_MANAGER_FACE, CmdSetCompanyManagerFace, 0,                                          CMDT_OTHER_MANAGEMENT)
 DEF_CMD_TRAIT(CMD_SET_COMPANY_COLOUR,       CmdSetCompanyColour,      0,                                          CMDT_OTHER_MANAGEMENT)
+DEF_CMD_TRAIT(CMD_COMPANY_RESET, CmdCompanyReset, 0, CMDT_OTHER_MANAGEMENT)
+DEF_CMD_TRAIT(CMD_COMPANY_CLOSE, CmdCompanyClose, 0, CMDT_OTHER_MANAGEMENT)
 
 #endif /* COMPANY_CMD_H */

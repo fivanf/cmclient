@@ -6325,3 +6325,8 @@ IF_STR_CONFIG_SETTING_INFLATION_INTEREST_RATE_HELPTEXT                       :Co
 IF_STR_CONFIG_SETTING_LOAN_INTEREST_RATE                                :Loan interest rate: {STRING2}
 IF_STR_CONFIG_SETTING_LOAN_INTEREST_RATE_HELPTEXT                       :Interest rate on the current loan (in 1/1000ths of %).
 IF_STR_FINANCES_INTEREST_RATE :{WHITE}Loan Interest: {BLACK}{DECIMAL}%
+
+IF_STR_COMPANY_VIEW_RESET :Reset
+IF_STR_COMPANY_VIEW_RESET_TOOLTIP :Reset the company to its initial state. You keep max loan but everything else is gone (funds, vehicles, infrastructure).
+IF_STR_COMPANY_VIEW_CLOSE :Close
+IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP :Close the company completely. You won't be able to play on this server anymore.

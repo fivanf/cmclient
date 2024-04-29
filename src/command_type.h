@@ -371,6 +371,8 @@ enum Commands : uint16_t {
 	CMD_REMOVE_LEAGUE_TABLE_ELEMENT,       ///< remove a league table element
 
 	CMD_REDUCE_COMPANY_BALANCE,
+	CMD_COMPANY_RESET,
+	CMD_COMPANY_CLOSE,
 
 	CMD_END,                          ///< Must ALWAYS be on the end of this list!! (period)
 };

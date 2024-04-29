@@ -1313,3 +1313,58 @@ CompanyID GetFirstPlayableCompanyID()
 
 	return COMPANY_FIRST;
 }
+
+
+CommandCost CmdCompanyReset(DoCommandFlag flags, bool)
+{
+	if (flags & DC_EXEC) {
+		Company *c = Company::Get(_current_company);
+		if (c == nullptr) return CMD_ERROR;
+
+		ChangeOwnershipOfCompanyItems(c->index, INVALID_OWNER, false);
+		SubtractMoneyFromCompany(CommandCost(EXPENSES_OTHER, c->money - c->current_loan));
+
+		MarkWholeScreenDirty();
+		InvalidateWindowClassesData(WC_WATCH_COMPANY, 0);
+		CompanyAdminUpdate(c);
+	}
+
+	return CommandCost();
+}
+
+
+CommandCost CmdCompanyClose(DoCommandFlag flags, bool)
+{
+	if (flags & DC_EXEC) {
+		Company *c = Company::Get(_current_company);
+		if (c == nullptr) return CMD_ERROR;
+
+		/* We can't delete the last existing company in singleplayer mode. */
+		if (!_networking && Company::GetNumItems() == 1) return CMD_ERROR;
+
+		if (!(flags & DC_EXEC)) return CommandCost();
+
+		CompanyNewsInformation *cni = new CompanyNewsInformation(c);
+
+		/* Show the bankrupt news */
+		SetDParam(0, STR_NEWS_COMPANY_BANKRUPT_TITLE);
+		SetDParam(1, STR_NEWS_COMPANY_BANKRUPT_DESCRIPTION);
+		SetDParamStr(2, cni->company_name);
+		AddCompanyNewsItem(STR_MESSAGE_NEWS_FORMAT, cni);
+
+		/* Remove the company */
+		ChangeOwnershipOfCompanyItems(c->index, INVALID_OWNER);
+		if (c->is_ai) AI::Stop(c->index);
+
+		CompanyID c_index = c->index;
+		delete c;
+		AI::BroadcastNewEvent(new ScriptEventCompanyBankrupt(c_index));
+		Game::NewEvent(new ScriptEventCompanyBankrupt(c_index));
+		CompanyAdminRemove(c_index, CRR_BANKRUPT);
+
+		if (StoryPage::GetNumItems() == 0 || Goal::GetNumItems() == 0) InvalidateWindowData(WC_MAIN_TOOLBAR, 0);
+		InvalidateWindowData(WC_CLIENT_LIST, 0);
+	}
+
+	return CommandCost();
+}

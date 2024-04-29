@@ -1481,6 +1481,32 @@ public:
     Commands get_command() override;
 };
 
+class CompanyReset: public Command {
+public:
+    bool redundant;
+
+    CompanyReset(bool redundant)
+        :redundant{redundant} {}
+    ~CompanyReset() override {}
+
+    bool _post(::CommandCallback * callback) override;
+    CommandCost _do(DoCommandFlag flags) override;
+    Commands get_command() override;
+};
+
+class CompanyClose: public Command {
+public:
+    bool redundant;
+
+    CompanyClose(bool redundant)
+        :redundant{redundant} {}
+    ~CompanyClose() override {}
+
+    bool _post(::CommandCallback * callback) override;
+    CommandCost _do(DoCommandFlag flags) override;
+    Commands get_command() override;
+};
+
 class AutoreplaceVehicle: public Command {
 public:
     VehicleID veh_id;

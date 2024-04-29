@@ -948,6 +948,24 @@ CommandCost SetCompanyColour::_do(DoCommandFlag flags) {
     return (::Command<CMD_SET_COMPANY_COLOUR>::Do(flags, scheme, primary, colour));
 }
 
+Commands CompanyReset::get_command() { return CMD_COMPANY_RESET; }
+static constexpr auto _CompanyReset_dispatch = MakeDispatchTable<CMD_COMPANY_RESET, bool>();
+bool CompanyReset::_post(::CommandCallback *callback) {
+    return _CompanyReset_dispatch[FindCallbackIndex(callback)](this->request_id, this->error, this->redundant);
+}
+CommandCost CompanyReset::_do(DoCommandFlag flags) {
+    return (::Command<CMD_COMPANY_RESET>::Do(flags, redundant));
+}
+
+Commands CompanyClose::get_command() { return CMD_COMPANY_CLOSE; }
+static constexpr auto _CompanyClose_dispatch = MakeDispatchTable<CMD_COMPANY_CLOSE, bool>();
+bool CompanyClose::_post(::CommandCallback *callback) {
+    return _CompanyClose_dispatch[FindCallbackIndex(callback)](this->request_id, this->error, this->redundant);
+}
+CommandCost CompanyClose::_do(DoCommandFlag flags) {
+    return (::Command<CMD_COMPANY_CLOSE>::Do(flags, redundant));
+}
+
 Commands AutoreplaceVehicle::get_command() { return CMD_AUTOREPLACE_VEHICLE; }
 static constexpr auto _AutoreplaceVehicle_dispatch = MakeDispatchTable<CMD_AUTOREPLACE_VEHICLE, VehicleID>();
 bool AutoreplaceVehicle::_post(::CommandCallback *callback) {

@@ -16,7 +16,7 @@
 #include "vehicle_type.h"
 
 bool MayCompanyTakeOver(CompanyID cbig, CompanyID small);
-void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner);
+void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner, bool kick=true);
 static const int OWNED_BY_OWNER_IN_PARAMETERS_OFFSET = 2; ///< The index in the parameters for the owner information.
 void SetDParamsForOwnedBy(Owner owner, TileIndex tile);
 void SetLocalCompany(CompanyID new_company);

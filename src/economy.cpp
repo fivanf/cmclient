@@ -334,14 +334,14 @@ int UpdateCompanyRatingAndValue(Company *c, bool update)
  * @param old_owner The company that gets removed.
  * @param new_owner The company to merge to, or INVALID_OWNER to remove the company.
  */
-void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
+void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner, bool kick)
 {
 	/* We need to set _current_company to old_owner before we try to move
 	 * the client. This is needed as it needs to know whether "you" really
 	 * are the current local company. */
 	Backup<CompanyID> cur_company(_current_company, old_owner, FILE_LINE);
 	/* In all cases, make spectators of clients connected to that company */
-	if (_networking) NetworkClientsToSpectators(old_owner);
+	if (kick && _networking) NetworkClientsToSpectators(old_owner);
 	if (old_owner == _local_company) {
 		/* Single player cheated to AI company.
 		 * There are no spectators in singleplayer mode, so we must pick some other company. */

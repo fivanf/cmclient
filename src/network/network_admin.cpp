@@ -678,6 +678,7 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 				.with_request_id(request_id)
 				.post(&CcRpc);
 			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
+			break;
 		}
 		case 1: {  // get_companies_info
 			nlohmann::json result;
@@ -702,6 +703,7 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 				.with_request_id(request_id)
 				.post(&CcRpc);
 			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
+			break;
 		}
 		case 3: {  // set_company_password
 			NetworkChangeCompanyPassword(c->index, text);

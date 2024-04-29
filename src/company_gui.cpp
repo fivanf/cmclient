@@ -47,6 +47,7 @@
 
 #include "widgets/company_widget.h"
 
+#include "citymania/cm_commands.hpp"
 #include "citymania/cm_hotkeys.hpp"
 #include "citymania/cm_main.hpp"
 
@@ -2223,7 +2224,11 @@ static constexpr NWidgetPart _nested_company_widgets[] = {
 							NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_GIVE_MONEY), SetDataTip(STR_COMPANY_VIEW_GIVE_MONEY_BUTTON, STR_COMPANY_VIEW_GIVE_MONEY_TOOLTIP),
 						EndContainer(),
 						NWidget(NWID_SELECTION, INVALID_COLOUR, WID_C_SELECT_MULTIPLAYER),
-							NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_COMPANY_PASSWORD), SetDataTip(STR_COMPANY_VIEW_PASSWORD, STR_COMPANY_VIEW_PASSWORD_TOOLTIP),
+							NWidget(NWID_VERTICAL), SetPIPRatio(1, 0, 0),
+								NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_COMPANY_PASSWORD), SetDataTip(STR_COMPANY_VIEW_PASSWORD, STR_COMPANY_VIEW_PASSWORD_TOOLTIP),
+								NWidget(WWT_PUSHTXTBTN, COLOUR_RED, IF_WID_C_COMPANY_RESET), SetDataTip(IF_STR_COMPANY_VIEW_RESET, IF_STR_COMPANY_VIEW_RESET_TOOLTIP),
+								NWidget(WWT_PUSHTXTBTN, COLOUR_RED, IF_WID_C_COMPANY_CLOSE), SetDataTip(IF_STR_COMPANY_VIEW_CLOSE, IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP),
+							EndContainer(),
 							NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_COMPANY_JOIN), SetDataTip(STR_COMPANY_VIEW_JOIN, STR_COMPANY_VIEW_JOIN_TOOLTIP),
 						EndContainer(),
 						// NWidget(NWID_SELECTION, INVALID_COLOUR, WID_C_SELECT_MOD),
@@ -2383,6 +2388,8 @@ struct CompanyWindow : Window
 			case WID_C_HOSTILE_TAKEOVER:
 			case WID_C_COMPANY_PASSWORD:
 			case WID_C_COMPANY_JOIN:
+			case IF_WID_C_COMPANY_RESET:
+			case IF_WID_C_COMPANY_CLOSE:
 				size->width = GetStringBoundingBox(STR_COMPANY_VIEW_VIEW_HQ_BUTTON).width;
 				size->width = std::max(size->width, GetStringBoundingBox(STR_COMPANY_VIEW_BUILD_HQ_BUTTON).width);
 				size->width = std::max(size->width, GetStringBoundingBox(STR_COMPANY_VIEW_RELOCATE_HQ).width);
@@ -2391,6 +2398,8 @@ struct CompanyWindow : Window
 				size->width = std::max(size->width, GetStringBoundingBox(STR_COMPANY_VIEW_HOSTILE_TAKEOVER_BUTTON).width);
 				size->width = std::max(size->width, GetStringBoundingBox(STR_COMPANY_VIEW_PASSWORD).width);
 				size->width = std::max(size->width, GetStringBoundingBox(STR_COMPANY_VIEW_JOIN).width);
+				size->width = std::max(size->width, GetStringBoundingBox(IF_STR_COMPANY_VIEW_RESET).width);
+				size->width = std::max(size->width, GetStringBoundingBox(IF_STR_COMPANY_VIEW_CLOSE).width);
 				size->width += padding.width;
 				break;
 
@@ -2623,6 +2632,16 @@ struct CompanyWindow : Window
 					NetworkClientRequestMove(company);
 				}
 				MarkWholeScreenDirty();
+				break;
+			}
+
+			case IF_WID_C_COMPANY_RESET: {
+				citymania::cmd::CompanyReset(true).post();
+				break;
+			}
+
+			case IF_WID_C_COMPANY_CLOSE: {
+				citymania::cmd::CompanyClose(true).post();
 				break;
 			}
 
