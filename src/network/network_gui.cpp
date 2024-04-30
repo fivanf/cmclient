@@ -1659,10 +1659,10 @@ private:
 		this->player_self_index = -1;
 
 		/* As spectator, show a line to create a new company. */
-		if (client_playas == COMPANY_SPECTATOR && !NetworkMaxCompaniesReached()) {
-			this->buttons[line_count].push_back(std::make_unique<CompanyButton>(SPR_JOIN, STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP, COLOUR_ORANGE, COMPANY_SPECTATOR, &NetworkClientListWindow::OnClickCompanyNew));
-			this->line_count += 1;
-		}
+		// if (client_playas == COMPANY_SPECTATOR && !NetworkMaxCompaniesReached()) {
+		// 	this->buttons[line_count].push_back(std::make_unique<CompanyButton>(SPR_JOIN, STR_NETWORK_CLIENT_LIST_NEW_COMPANY_TOOLTIP, COLOUR_ORANGE, COMPANY_SPECTATOR, &NetworkClientListWindow::OnClickCompanyNew));
+		// 	this->line_count += 1;
+		// }
 
 		if (client_playas != COMPANY_SPECTATOR) {
 			this->RebuildListCompany(client_playas, client_playas);
@@ -1850,7 +1850,7 @@ public:
 					int index = this->vscroll->GetScrolledRowFromWidget(pt.y, this, WID_CL_MATRIX);
 					NetworkClientInfo *own_ci = NetworkClientInfo::GetByClientID(_network_own_client_id);
 					CompanyID client_playas = own_ci == nullptr ? COMPANY_SPECTATOR : own_ci->client_playas;
-					if (client_playas == COMPANY_SPECTATOR && !NetworkMaxCompaniesReached()) index--;
+					// if (client_playas == COMPANY_SPECTATOR && !NetworkMaxCompaniesReached()) index--;
 					if (index < 0) break;
 					auto count_company = [&index](CompanyID company_id) -> bool {
 						if (index == 0) {
@@ -2159,9 +2159,9 @@ public:
 				NetworkClientInfo *own_ci = NetworkClientInfo::GetByClientID(_network_own_client_id);
 				CompanyID client_playas = own_ci == nullptr ? COMPANY_SPECTATOR : own_ci->client_playas;
 
-				if (client_playas == COMPANY_SPECTATOR && !NetworkMaxCompaniesReached()) {
-					this->DrawCompany(COMPANY_NEW_COMPANY, ir, line);
-				}
+				// if (client_playas == COMPANY_SPECTATOR && !NetworkMaxCompaniesReached()) {
+				// 	this->DrawCompany(COMPANY_NEW_COMPANY, ir, line);
+				// }
 
 				if (client_playas != COMPANY_SPECTATOR) {
 					this->DrawCompany(client_playas, ir, line);
