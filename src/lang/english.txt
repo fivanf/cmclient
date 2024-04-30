@@ -6309,7 +6309,7 @@ CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_ROAD_VEHICLE                    :{BLACK}Show 
 CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_SHIP                            :{BLACK}Show hidden ({NUM})
 CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_AIRCRAFT                        :{BLACK}Show hidden ({NUM})
 
-IF_STR_INTRO_SERVER_1 :Server #1
+IF_STR_INTRO_SERVER_1 :Real economy server #1
 IF_STR_INTRO_TOOLTIP_SERVER_1 :Connect to the server #1
 IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME                               :{WHITE}Your player name has not been set. The name can be set at the top of the main menu window
 

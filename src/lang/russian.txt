@@ -6532,7 +6532,7 @@ CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_ROAD_VEHICLE                    :{BLACK}По�
 CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_SHIP                            :{BLACK}Показать скрытые ({NUM})
 CM_STR_SHOW_HIDDEN_ENGINES_VEHICLE_AIRCRAFT                        :{BLACK}Показать скрытые ({NUM})
 
-IF_STR_INTRO_SERVER_1 :Сервер #1
+IF_STR_INTRO_SERVER_1 :Реальная экономика сервер #1
 IF_STR_INTRO_TOOLTIP_SERVER_1 :Подключиться к серверу номер 1
 IF_STR_NETWORK_ERROR_BAD_PLAYER_NAME :{WHITE}Не указано имя игрока. Его можно ввести в верхней части окна главного меню игры.
 
