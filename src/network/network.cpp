@@ -779,6 +779,7 @@ public:
 bool NetworkClientConnectGame(const std::string &connection_string, CompanyID default_company, const std::string &join_server_password, const std::string &join_company_password)
 {
 	Debug(net, 9, "NetworkClientConnectGame(): connection_string={}", connection_string);
+	if (default_company == COMPANY_NEW_COMPANY) return false;
 
 	CompanyID join_as = default_company;
 	std::string resolved_connection_string = ServerAddress::Parse(connection_string, NETWORK_DEFAULT_PORT, &join_as).connection_string;

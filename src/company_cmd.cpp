@@ -875,6 +875,7 @@ CommandCost CmdCompanyCtrl(DoCommandFlag flags, CompanyCtrlAction cca, CompanyID
 		case CCA_NEW: { // Create a new company
 			/* This command is only executed in a multiplayer game */
 			if (!_networking && !citymania::IsReplayingCommands()) return CMD_ERROR;
+			if (_current_company != OWNER_DEITY) return CMD_ERROR;
 
 			/* Has the network client a correct ClientIndex? */
 			if (!(flags & DC_EXEC)) return CommandCost();
@@ -884,7 +885,7 @@ CommandCost CmdCompanyCtrl(DoCommandFlag flags, CompanyCtrlAction cca, CompanyID
 			/* Delete multiplayer progress bar */
 			CloseWindowById(WC_NETWORK_STATUS_WINDOW, WN_NETWORK_STATUS_WINDOW_JOIN);
 
-			Company *c = DoStartupNewCompany(false);
+			Company *c = DoStartupNewCompany(false, company_id);
 
 			/* A new company could not be created, revert to being a spectator */
 			if (c == nullptr) {
@@ -903,24 +904,24 @@ CommandCost CmdCompanyCtrl(DoCommandFlag flags, CompanyCtrlAction cca, CompanyID
 			NetworkServerNewCompany(c, ci);
 
 			/* This is the client (or non-dedicated server) who wants a new company */
-			if (client_id == _network_own_client_id) {
-				assert(_local_company == COMPANY_SPECTATOR);
-				SetLocalCompany(c->index);
-				if (!_settings_client.network.default_company_pass.empty()) {
-					NetworkChangeCompanyPassword(_local_company, _settings_client.network.default_company_pass);
-				}
+			// if (client_id == _network_own_client_id) {
+			// 	assert(_local_company == COMPANY_SPECTATOR);
+			// 	SetLocalCompany(c->index);
+			// 	if (!_settings_client.network.default_company_pass.empty()) {
+			// 		NetworkChangeCompanyPassword(_local_company, _settings_client.network.default_company_pass);
+			// 	}
 
-				/* In network games, we need to try setting the company manager face here to sync it to all clients.
-				 * If a favorite company manager face is selected, choose it. Otherwise, use a random face. */
-				if (_company_manager_face != 0) Command<CMD_SET_COMPANY_MANAGER_FACE>::SendNet(STR_NULL, c->index, _company_manager_face);
+			// 	/* In network games, we need to try setting the company manager face here to sync it to all clients.
+			// 	 * If a favorite company manager face is selected, choose it. Otherwise, use a random face. */
+			// 	if (_company_manager_face != 0) Command<CMD_SET_COMPANY_MANAGER_FACE>::SendNet(STR_NULL, c->index, _company_manager_face);
 
-				/* Now that we have a new company, broadcast our company settings to
-				 * all clients so everything is in sync */
-				SyncCompanySettings();
+			// 	/* Now that we have a new company, broadcast our company settings to
+			// 	 * all clients so everything is in sync */
+			// 	SyncCompanySettings();
 
-				UpdateAllTownVirtCoords();  // CityMania (for colouring towns)
-				MarkWholeScreenDirty();
-			}
+			// 	UpdateAllTownVirtCoords();  // CityMania (for colouring towns)
+			// 	MarkWholeScreenDirty();
+			// }
 			break;
 		}
 

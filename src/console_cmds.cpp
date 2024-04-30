@@ -1099,7 +1099,7 @@ DEF_CONSOLE_CMD(ConNetworkConnect)
 
 	if (argc < 2) return false;
 
-	return NetworkClientConnectGame(argv[1], COMPANY_NEW_COMPANY);
+	return NetworkClientConnectGame(argv[1], COMPANY_SPECTATOR);
 }
 
 /*********************************

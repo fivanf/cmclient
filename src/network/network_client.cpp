@@ -918,14 +918,14 @@ NetworkRecvStatus ClientNetworkGameSocketHandler::Receive_SERVER_MAP_DONE(Packet
 	if (_network_join.company == COMPANY_NEW_COMPANY || !Company::IsValidID(_network_join.company)) {
 		SetLocalCompany(COMPANY_SPECTATOR);
 
-		if (_network_join.company != COMPANY_SPECTATOR) {
-			/* We have arrived and ready to start playing; send a command to make a new company;
-			 * the server will give us a client-id and let us in */
-			Debug(net, 9, "Client::join_status = REGISTERING");
-			_network_join_status = NETWORK_JOIN_STATUS_REGISTERING;
-			ShowJoinStatusWindow();
-			Command<CMD_COMPANY_CTRL>::SendNet(STR_NULL, _local_company, CCA_NEW, INVALID_COMPANY, CRR_NONE, INVALID_CLIENT_ID);
-		}
+		// if (_network_join.company != COMPANY_SPECTATOR) {
+		// 	/* We have arrived and ready to start playing; send a command to make a new company;
+		// 	 * the server will give us a client-id and let us in */
+		// 	Debug(net, 9, "Client::join_status = REGISTERING");
+		// 	_network_join_status = NETWORK_JOIN_STATUS_REGISTERING;
+		// 	ShowJoinStatusWindow();
+		// 	Command<CMD_COMPANY_CTRL>::SendNet(STR_NULL, _local_company, CCA_NEW, INVALID_COMPANY, CRR_NONE, INVALID_CLIENT_ID);
+		// }
 	} else {
 		/* take control over an existing company */
 		SetLocalCompany(_network_join.company);

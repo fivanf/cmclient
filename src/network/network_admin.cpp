@@ -709,6 +709,18 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 			NetworkChangeCompanyPassword(c->index, text);
 			return this->SendRpcResponse(request_id, nlohmann::json(true));
 		}
+		case 4: {  // create_company
+			auto company_id = (CompanyID)(arg1 - 1);
+			if (Company::IsValidID(company_id)) {
+				return this->SendRpcError(request_id, "Company already exists {}", arg1);
+			}
+			auto res = citymania::cmd::CompanyCtrl(CCA_NEW, company_id, CRR_NONE, INVALID_CLIENT_ID)
+				.as_company(OWNER_DEITY)
+				.with_request_id(request_id)
+				.post(&CcRpc);
+			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
+			break;
+		}
 	}
 
 	return NETWORK_RECV_STATUS_OKAY;

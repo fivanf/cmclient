@@ -27,7 +27,7 @@ CommandCost CmdSetCompanyColour(DoCommandFlag flags, LiveryScheme scheme, bool p
 CommandCost CmdCompanyReset(DoCommandFlag flags, bool redundant);
 CommandCost CmdCompanyClose(DoCommandFlag flags, bool redundant);
 
-DEF_CMD_TRAIT(CMD_COMPANY_CTRL,             CmdCompanyCtrl,           CMD_SPECTATOR | CMD_CLIENT_ID | CMD_NO_EST, CMDT_SERVER_SETTING)
+DEF_CMD_TRAIT(CMD_COMPANY_CTRL,             CmdCompanyCtrl,           CMD_DEITY | CMD_CLIENT_ID | CMD_NO_EST, CMDT_SERVER_SETTING)
 DEF_CMD_TRAIT(CMD_GIVE_MONEY,               CmdGiveMoney,             0,                                          CMDT_MONEY_MANAGEMENT)
 DEF_CMD_TRAIT(CMD_RENAME_COMPANY,           CmdRenameCompany,         0,                                          CMDT_OTHER_MANAGEMENT)
 DEF_CMD_TRAIT(CMD_RENAME_PRESIDENT,         CmdRenamePresident,       0,                                          CMDT_OTHER_MANAGEMENT)

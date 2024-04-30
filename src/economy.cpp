@@ -580,79 +580,79 @@ static void CompanyCheckBankrupt(Company *c)
 		return;
 	}
 
-	c->months_of_bankruptcy++;
+	// c->months_of_bankruptcy++;
 
-	switch (c->months_of_bankruptcy) {
-		/* All the boring cases (months) with a bad balance where no action is taken */
-		case 0:
-		case 1:
-		case 2:
-		case 3:
+	// switch (c->months_of_bankruptcy) {
+	// 	/* All the boring cases (months) with a bad balance where no action is taken */
+	// 	case 0:
+	// 	case 1:
+	// 	case 2:
+	// 	case 3:
 
-		case 5:
-		case 6:
+	// 	case 5:
+	// 	case 6:
 
-		case 8:
-		case 9:
-			break;
+	// 	case 8:
+	// 	case 9:
+	// 		break;
 
-		/* Warn about bankruptcy after 3 months */
-		case 4: {
-			CompanyNewsInformation *cni = new CompanyNewsInformation(c);
-			SetDParam(0, STR_NEWS_COMPANY_IN_TROUBLE_TITLE);
-			SetDParam(1, STR_NEWS_COMPANY_IN_TROUBLE_DESCRIPTION);
-			SetDParamStr(2, cni->company_name);
-			AddCompanyNewsItem(STR_MESSAGE_NEWS_FORMAT, cni);
-			AI::BroadcastNewEvent(new ScriptEventCompanyInTrouble(c->index));
-			Game::NewEvent(new ScriptEventCompanyInTrouble(c->index));
-			break;
-		}
+	// 	/* Warn about bankruptcy after 3 months */
+	// 	case 4: {
+	// 		CompanyNewsInformation *cni = new CompanyNewsInformation(c);
+	// 		SetDParam(0, STR_NEWS_COMPANY_IN_TROUBLE_TITLE);
+	// 		SetDParam(1, STR_NEWS_COMPANY_IN_TROUBLE_DESCRIPTION);
+	// 		SetDParamStr(2, cni->company_name);
+	// 		AddCompanyNewsItem(STR_MESSAGE_NEWS_FORMAT, cni);
+	// 		AI::BroadcastNewEvent(new ScriptEventCompanyInTrouble(c->index));
+	// 		Game::NewEvent(new ScriptEventCompanyInTrouble(c->index));
+	// 		break;
+	// 	}
 
-		/* Offer company for sale after 6 months */
-		case 7: {
-			/* Don't consider the loan */
-			Money val = CalculateCompanyValue(c, false);
+	// 	/* Offer company for sale after 6 months */
+	// 	case 7: {
+	// 		/* Don't consider the loan */
+	// 		Money val = CalculateCompanyValue(c, false);
 
-			c->bankrupt_value = val;
-			c->bankrupt_asked = 1 << c->index; // Don't ask the owner
-			c->bankrupt_timeout = 0;
+	// 		c->bankrupt_value = val;
+	// 		c->bankrupt_asked = 1 << c->index; // Don't ask the owner
+	// 		c->bankrupt_timeout = 0;
 
-			/* The company assets should always have some value */
-			assert(c->bankrupt_value > 0);
-			break;
-		}
+	// 		/* The company assets should always have some value */
+	// 		assert(c->bankrupt_value > 0);
+	// 		break;
+	// 	}
 
-		/* Bankrupt company after 6 months (if the company has no value) or latest
-		 * after 9 months (if it still had value after 6 months) */
-		default:
-		case 10: {
-			if (!_networking && _local_company == c->index) {
-				/* If we are in singleplayer mode, leave the company playing. Eg. there
-				 * is no THE-END, otherwise mark the client as spectator to make sure
-				 * they are no longer in control of this company. However... when you
-				 * join another company (cheat) the "unowned" company can bankrupt. */
-				c->bankrupt_asked = MAX_UVALUE(CompanyMask);
-				break;
-			}
+	// 	/* Bankrupt company after 6 months (if the company has no value) or latest
+	// 	 * after 9 months (if it still had value after 6 months) */
+	// 	default:
+	// 	case 10: {
+	// 		if (!_networking && _local_company == c->index) {
+	// 			/* If we are in singleplayer mode, leave the company playing. Eg. there
+	// 			 * is no THE-END, otherwise mark the client as spectator to make sure
+	// 			 * they are no longer in control of this company. However... when you
+	// 			 * join another company (cheat) the "unowned" company can bankrupt. */
+	// 			c->bankrupt_asked = MAX_UVALUE(CompanyMask);
+	// 			break;
+	// 		}
 
-			/* Actually remove the company, but not when we're a network client.
-			 * In case of network clients we will be getting a command from the
-			 * server. It is done in this way as we are called from the
-			 * StateGameLoop which can't change the current company, and thus
-			 * updating the local company triggers an assert later on. In the
-			 * case of a network game the command will be processed at a time
-			 * that changing the current company is okay. In case of single
-			 * player we are sure (the above check) that we are not the local
-			 * company and thus we won't be moved. */
-			if (!_networking || _network_server) {
-				Command<CMD_COMPANY_CTRL>::Post(CCA_DELETE, c->index, CRR_BANKRUPT, INVALID_CLIENT_ID);
-				return;
-			}
-			break;
-		}
-	}
+	// 		/* Actually remove the company, but not when we're a network client.
+	// 		 * In case of network clients we will be getting a command from the
+	// 		 * server. It is done in this way as we are called from the
+	// 		 * StateGameLoop which can't change the current company, and thus
+	// 		 * updating the local company triggers an assert later on. In the
+	// 		 * case of a network game the command will be processed at a time
+	// 		 * that changing the current company is okay. In case of single
+	// 		 * player we are sure (the above check) that we are not the local
+	// 		 * company and thus we won't be moved. */
+	// 		if (!_networking || _network_server) {
+	// 			Command<CMD_COMPANY_CTRL>::Post(CCA_DELETE, c->index, CRR_BANKRUPT, INVALID_CLIENT_ID);
+	// 			return;
+	// 		}
+	// 		break;
+	// 	}
+	// }
 
-	if (CeilDiv(c->months_of_bankruptcy, 3) != CeilDiv(c->months_of_bankruptcy - 1, 3)) CompanyAdminUpdate(c);
+	// if (CeilDiv(c->months_of_bankruptcy, 3) != CeilDiv(c->months_of_bankruptcy - 1, 3)) CompanyAdminUpdate(c);
 }
 
 /**
