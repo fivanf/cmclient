@@ -6329,4 +6329,11 @@ IF_STR_FINANCES_INTEREST_RATE :{WHITE}Loan Interest: {BLACK}{DECIMAL}%
 IF_STR_COMPANY_VIEW_RESET :Reset
 IF_STR_COMPANY_VIEW_RESET_TOOLTIP :Reset the company to its initial state. You keep max loan but everything else is gone (funds, vehicles, infrastructure).
 IF_STR_COMPANY_VIEW_CLOSE :Close
-IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP :Close the company completely. You won't be able to play on this server anymore.
+IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP :Close the company completely. You may not be able to play on this server again.
+
+IF_STR_COMPANY_RESET_CAPTION :{WHITE}Reset company
+IF_STR_COMPANY_RESET_QUERY : {YELLOW}Are you sure you want to reset your company? You'll keep max loan but everything else will be gone (funds, vehicles, infrastructure).
+IF_STR_COMPANY_RESET_TIMEOUT :Unable to reset company, not enough time passed since opening or last reset.
+IF_STR_COMPANY_CLOSE_CAPTION :{WHITE}Close company
+IF_STR_COMPANY_CLOSE_QUERY :{YELLOW}Are you sure you want to close your company? You may not be able to play on this server again.
+IF_STR_COMPANY_CLOSE_TIMEOUT :Unable to close company, not enough time passed since opening or last reset.

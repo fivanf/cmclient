@@ -2545,6 +2545,18 @@ struct CompanyWindow : Window
 		if (wid->UpdateVerticalSize(y)) this->ReInit(0, 0);
 	}
 
+	static void AskCompanyResetCallback(Window *, bool confirmed)
+	{
+		if (!confirmed) return;
+		citymania::cmd::CompanyReset(true).post();
+	}
+
+	static void AskCompanyCloseCallback(Window *, bool confirmed)
+	{
+		if (!confirmed) return;
+		citymania::cmd::CompanyClose(true).post();
+	}
+
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		switch (widget) {
@@ -2636,12 +2648,14 @@ struct CompanyWindow : Window
 			}
 
 			case IF_WID_C_COMPANY_RESET: {
-				citymania::cmd::CompanyReset(true).post();
+				// this->HandleButtonClick(WID_DPI_REMOVE_ALL_INDUSTRIES_WIDGET);
+				ShowQuery(IF_STR_COMPANY_RESET_CAPTION, IF_STR_COMPANY_RESET_QUERY, nullptr, AskCompanyResetCallback);
 				break;
 			}
 
 			case IF_WID_C_COMPANY_CLOSE: {
-				citymania::cmd::CompanyClose(true).post();
+				// this->HandleButtonClick(WID_DPI_REMOVE_ALL_INDUSTRIES_WIDGET);
+				ShowQuery(IF_STR_COMPANY_CLOSE_CAPTION, IF_STR_COMPANY_CLOSE_QUERY, nullptr, AskCompanyCloseCallback);
 				break;
 			}
 

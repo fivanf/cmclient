@@ -6551,4 +6551,9 @@ IF_STR_FINANCES_INTEREST_RATE :{WHITE}Процентная ставка: {BLACK}
 IF_STR_COMPANY_VIEW_RESET :Сбросить
 IF_STR_COMPANY_VIEW_RESET_TOOLTIP :Сбрасывает компанию в начальное состояние. Максимальный размер кредита сохраняется, а все остальное сбрасывается (деньги, транспорт, инфраструктура).
 IF_STR_COMPANY_VIEW_CLOSE :Закрыть
-IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP :Полностью закрыть компанию. Вы не сможете больше играть на этом сервере.
+IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP :Полностью закрыть компанию. Возмножно, вы больше не сможете играть на этом сервере.
+
+IF_STR_COMPANY_RESET_CAPTION :{WHITE}Сбросить компанию
+IF_STR_COMPANY_RESET_QUERY :{YELLOW}Вы уверены что хотите сбросить компанию? Максимальный размер кредита сохранится, но все остальное сбросится (деньги, транспорт, инфраструктура).
+IF_STR_COMPANY_CLOSE_CAPTION :{WHITE}Закрыть компанию
+IF_STR_COMPANY_CLOSE_QUERY :{YELLOW}Вы уверены что хотите полностью закрыть компанию? Возмножно, вы больше не сможете играть на этом сервере.
