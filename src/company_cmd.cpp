@@ -1322,7 +1322,7 @@ CommandCost CmdCompanyReset(DoCommandFlag flags, bool)
 		if (c == nullptr) return CMD_ERROR;
 
 		ChangeOwnershipOfCompanyItems(c->index, INVALID_OWNER, false);
-		SubtractMoneyFromCompany(CommandCost(EXPENSES_OTHER, c->money - c->current_loan));
+		c->money = c->current_loan;
 
 		MarkWholeScreenDirty();
 		InvalidateWindowClassesData(WC_WATCH_COMPANY, 0);

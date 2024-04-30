@@ -342,7 +342,7 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner, bool kick)
 	Backup<CompanyID> cur_company(_current_company, old_owner, FILE_LINE);
 	/* In all cases, make spectators of clients connected to that company */
 	if (kick && _networking) NetworkClientsToSpectators(old_owner);
-	if (old_owner == _local_company) {
+	if (kick && old_owner == _local_company) {
 		/* Single player cheated to AI company.
 		 * There are no spectators in singleplayer mode, so we must pick some other company. */
 		assert(!_networking);
