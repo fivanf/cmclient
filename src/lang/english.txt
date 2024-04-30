@@ -6337,3 +6337,5 @@ IF_STR_COMPANY_RESET_TIMEOUT :Unable to reset company, not enough time passed si
 IF_STR_COMPANY_CLOSE_CAPTION :{WHITE}Close company
 IF_STR_COMPANY_CLOSE_QUERY :{YELLOW}Are you sure you want to close your company? You may not be able to play on this server again.
 IF_STR_COMPANY_CLOSE_TIMEOUT :Unable to close company, not enough time passed since opening or last reset.
+
+IF_STR_COMPANY_NUM :Company {NUM}

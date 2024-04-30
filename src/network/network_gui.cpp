@@ -2098,9 +2098,8 @@ public:
 				DrawString(tr.left, tr.right, y + text_y_offset, STR_NETWORK_CLIENT_LIST_NEW_COMPANY, TC_WHITE);
 			} else {
 				DrawSprite(NetworkCompanyIsPassworded(company_id) ? CM_SPR_COMPANY_ICON_LOCKED : CM_SPR_COMPANY_ICON, COMPANY_SPRITE_COLOUR(company_id), icon_left, y + offset);
-				SetDParam(0, company_id);
-				SetDParam(1, company_id);
-				DrawString(tr.left, tr.right, y + text_y_offset, STR_COMPANY_NAME, TC_SILVER);
+				SetDParam(0, company_id + 1);
+				DrawString(tr.left, tr.right, y + text_y_offset, IF_STR_COMPANY_NUM, TC_SILVER);
 			}
 		}
 
