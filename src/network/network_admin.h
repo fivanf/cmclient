@@ -72,13 +72,13 @@ public:
 	NetworkRecvStatus SendCmdLogging(ClientID client_id, const CommandPacket &cp);
 	NetworkRecvStatus SendRconEnd(const std::string_view command);
 
-	NetworkRecvStatus SendRpcErrorData(IFRpcRequestID request_id, std::string_view error);
+	NetworkRecvStatus SendRpcErrorData(IFRpcRequestID request_id, std::string_view code, std::string_view error);
 	template <typename... Args>
-	NetworkRecvStatus SendRpcError(IFRpcRequestID request_id, fmt::format_string<Args...> format, Args&& ... args) {
-	    return this->SendRpcError(request_id, fmt::format(format, std::forward<Args>(args)...));
+	NetworkRecvStatus SendRpcError(IFRpcRequestID request_id, std::string_view code, fmt::format_string<Args...> format, Args&& ... args) {
+	    return this->SendRpcError(request_id, code, fmt::format(format, std::forward<Args>(args)...));
 	};
-	NetworkRecvStatus SendRpcError(IFRpcRequestID request_id, std::string_view error) {
-		return this->SendRpcErrorData(request_id, error);
+	NetworkRecvStatus SendRpcError(IFRpcRequestID request_id, std::string_view code, std::string_view error) {
+		return this->SendRpcErrorData(request_id, code, error);
 	};
 
 	NetworkRecvStatus SendRpcResponse(IFRpcRequestID request_id, const nlohmann::json &data);

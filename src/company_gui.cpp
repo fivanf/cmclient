@@ -2213,9 +2213,9 @@ static constexpr NWidgetPart _nested_company_widgets[] = {
 
 				/* Multi player buttons. */
 				NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_normal, 0), SetPIPRatio(1, 0, 0),
-					NWidget(NWID_VERTICAL), SetPIPRatio(1, 0, 0),
-						NWidget(WWT_EMPTY, COLOUR_GREY, WID_C_HAS_PASSWORD), SetFill(0, 0),
-					EndContainer(),
+					// NWidget(NWID_VERTICAL), SetPIPRatio(1, 0, 0),
+					// 	NWidget(WWT_EMPTY, COLOUR_GREY, WID_C_HAS_PASSWORD), SetFill(0, 0),
+					// EndContainer(),
 					NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_normal, 0),
 						NWidget(NWID_SELECTION, INVALID_COLOUR, WID_C_SELECT_HOSTILE_TAKEOVER),
 							NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_HOSTILE_TAKEOVER), SetDataTip(STR_COMPANY_VIEW_HOSTILE_TAKEOVER_BUTTON, STR_COMPANY_VIEW_HOSTILE_TAKEOVER_TOOLTIP),
@@ -2225,7 +2225,7 @@ static constexpr NWidgetPart _nested_company_widgets[] = {
 						EndContainer(),
 						NWidget(NWID_SELECTION, INVALID_COLOUR, WID_C_SELECT_MULTIPLAYER),
 							NWidget(NWID_VERTICAL), SetPIPRatio(1, 0, 0),
-								NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_COMPANY_PASSWORD), SetDataTip(STR_COMPANY_VIEW_PASSWORD, STR_COMPANY_VIEW_PASSWORD_TOOLTIP),
+								// NWidget(WWT_PUSHTXTBTN, COLOUR_GREY, WID_C_COMPANY_PASSWORD), SetDataTip(STR_COMPANY_VIEW_PASSWORD, STR_COMPANY_VIEW_PASSWORD_TOOLTIP),
 								NWidget(WWT_PUSHTXTBTN, COLOUR_RED, IF_WID_C_COMPANY_RESET), SetDataTip(IF_STR_COMPANY_VIEW_RESET, IF_STR_COMPANY_VIEW_RESET_TOOLTIP),
 								NWidget(WWT_PUSHTXTBTN, COLOUR_RED, IF_WID_C_COMPANY_CLOSE), SetDataTip(IF_STR_COMPANY_VIEW_CLOSE, IF_STR_COMPANY_VIEW_CLOSE_TOOLTIP),
 							EndContainer(),

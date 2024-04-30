@@ -636,7 +636,7 @@ void CcRpc(Commands, const CommandCost &result, IFRpcRequestID request_id, const
 	} else {
 		std::string message = GetString(result.GetErrorMessage());
 		for (ServerNetworkAdminSocketHandler *as : ServerNetworkAdminSocketHandler::IterateActive()) {
-			as->SendRpcError(request_id, message);
+			as->SendRpcError(request_id, "command_failed", message);
 		}
 	}
 }
@@ -647,7 +647,7 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 	if (this->status == ADMIN_STATUS_INACTIVE) return this->SendError(NETWORK_ERROR_NOT_EXPECTED);
 	uint32_t request_id = p.Recv_uint32();
 	if (request_id == 0) {
-		return this->SendRpcError(request_id, "Invalid request ID");
+		return this->SendRpcError(request_id, "invalid_request_id", "Invalid request ID");
 	}
 	uint32_t command = p.Recv_uint32();
 	int64_t arg1 = static_cast<int64_t>(p.Recv_uint64());
@@ -662,7 +662,7 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 			auto company_id = (CompanyID)(arg1 - 1);
 			c = Company::GetIfValid(company_id);
 			if (c == nullptr) {
-				return this->SendRpcError(request_id, "Invalid company {}", arg1);
+				return this->SendRpcError(request_id, "invalid_company", "Invalid company {}", arg1);
 			}
 			break;
 		}
@@ -677,7 +677,7 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 				.as_company(OWNER_DEITY)
 				.with_request_id(request_id)
 				.post(&CcRpc);
-			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
+			if (!res) return this->SendRpcError(request_id, "test_failed", "Command failed pre-queue testing");
 			break;
 		}
 		case 1: {  // get_companies_info
@@ -697,12 +697,12 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 		case 2: {  // reduce_company_balance
 			auto amount = (Money)arg2;
 			if (c->money - c->current_loan < amount)
-				return this->SendRpcError(request_id, "Insufficient own funds ({} < {})", static_cast<int64_t>(c->money - c->current_loan), static_cast<int64_t>(amount));
+				return this->SendRpcError(request_id, "no_funds", "Insufficient own funds ({} < {})", static_cast<int64_t>(c->money - c->current_loan), static_cast<int64_t>(amount));
 			auto res = citymania::cmd::ReduceCompanyBalance(c->index, amount)
 				.as_company(OWNER_DEITY)
 				.with_request_id(request_id)
 				.post(&CcRpc);
-			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
+			if (!res) return this->SendRpcError(request_id, "test_failed", "Command failed pre-queue testing");
 			break;
 		}
 		case 3: {  // set_company_password
@@ -712,13 +712,13 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 		case 4: {  // create_company
 			auto company_id = (CompanyID)(arg1 - 1);
 			if (Company::IsValidID(company_id)) {
-				return this->SendRpcError(request_id, "Company already exists {}", arg1);
+				return this->SendRpcError(request_id, "company_exists", "Company already exists {}", arg1);
 			}
 			auto res = citymania::cmd::CompanyCtrl(CCA_NEW, company_id, CRR_NONE, INVALID_CLIENT_ID)
 				.as_company(OWNER_DEITY)
 				.with_request_id(request_id)
 				.post(&CcRpc);
-			if (!res) return this->SendRpcError(request_id, "Command failed pre-queue testing");
+			if (!res) return this->SendRpcError(request_id, "test_failed", "Command failed pre-queue testing");
 			break;
 		}
 	}
@@ -726,11 +726,12 @@ NetworkRecvStatus ServerNetworkAdminSocketHandler::Receive_ADMIN_RPC_REQUEST(Pac
 	return NETWORK_RECV_STATUS_OKAY;
 }
 
-NetworkRecvStatus ServerNetworkAdminSocketHandler::SendRpcErrorData(IFRpcRequestID request_id, std::string_view error)
+NetworkRecvStatus ServerNetworkAdminSocketHandler::SendRpcErrorData(IFRpcRequestID request_id, std::string_view code, std::string_view error)
 {
 	nlohmann::json response;
 	response["request_id"] = request_id.base();
 	response["error"] = error;
+	response["code"] = code;
 	auto p = std::make_unique<Packet>(IF_ADMIN_PACKET_SERVER_RPC_RESPONSE);
 	auto json_str = response.dump(-1);
 	p->Send_string(json_str);
