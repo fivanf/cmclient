@@ -880,7 +880,8 @@ CommandCost CmdCompanyCtrl(DoCommandFlag flags, CompanyCtrlAction cca, CompanyID
 			/* Has the network client a correct ClientIndex? */
 			if (!(flags & DC_EXEC)) return CommandCost();
 
-			NetworkClientInfo *ci = NetworkClientInfo::GetByClientID(client_id);
+			// NetworkClientInfo *ci = NetworkClientInfo::GetByClientID(client_id);
+			NetworkClientInfo *ci = nullptr;
 
 			/* Delete multiplayer progress bar */
 			CloseWindowById(WC_NETWORK_STATUS_WINDOW, WN_NETWORK_STATUS_WINDOW_JOIN);
