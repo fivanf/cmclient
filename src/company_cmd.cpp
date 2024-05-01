@@ -615,6 +615,7 @@ Company *DoStartupNewCompany(bool is_ai, CompanyID company = INVALID_COMPANY)
 	c->avail_railtypes = GetCompanyRailTypes(c->index);
 	c->avail_roadtypes = GetCompanyRoadTypes(c->index);
 	c->inaugurated_year = TimerGameEconomy::year;
+	c->if_last_reset = TimerGameCalendar::date;
 
 	/* If starting a player company in singleplayer and a favorite company manager face is selected, choose it. Otherwise, use a random face.
 	 * In a network game, we'll choose the favorite face later in CmdCompanyCtrl to sync it to all clients. */
@@ -1319,12 +1320,14 @@ CompanyID GetFirstPlayableCompanyID()
 
 CommandCost CmdCompanyReset(DoCommandFlag flags, bool)
 {
-	if (flags & DC_EXEC) {
-		Company *c = Company::Get(_current_company);
-		if (c == nullptr) return CMD_ERROR;
+	Company *c = Company::Get(_current_company);
+	if (c == nullptr) return CMD_ERROR;
+	if (TimerGameCalendar::date - c->if_last_reset < _settings_game.economy.if_days_between_resets) return CMD_ERROR;
 
+	if (flags & DC_EXEC) {
 		ChangeOwnershipOfCompanyItems(c->index, INVALID_OWNER, false);
 		c->money = c->current_loan;
+		c->if_last_reset = TimerGameCalendar::date;
 
 		MarkWholeScreenDirty();
 		InvalidateWindowClassesData(WC_WATCH_COMPANY, 0);
@@ -1337,15 +1340,14 @@ CommandCost CmdCompanyReset(DoCommandFlag flags, bool)
 
 CommandCost CmdCompanyClose(DoCommandFlag flags, bool)
 {
+	Company *c = Company::Get(_current_company);
+	if (c == nullptr) return CMD_ERROR;
+	if (TimerGameCalendar::date - c->if_last_reset < _settings_game.economy.if_days_between_resets) return CMD_ERROR;
+
+	/* We can't delete the last existing company in singleplayer mode. */
+	if (!_networking && Company::GetNumItems() == 1) return CMD_ERROR;
+
 	if (flags & DC_EXEC) {
-		Company *c = Company::Get(_current_company);
-		if (c == nullptr) return CMD_ERROR;
-
-		/* We can't delete the last existing company in singleplayer mode. */
-		if (!_networking && Company::GetNumItems() == 1) return CMD_ERROR;
-
-		if (!(flags & DC_EXEC)) return CommandCost();
-
 		CompanyNewsInformation *cni = new CompanyNewsInformation(c);
 
 		/* Show the bankrupt news */

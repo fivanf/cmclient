@@ -604,6 +604,7 @@ struct EconomySettings {
 	uint16_t if_cargo_income_divider;        ///< Divider for all cargo income
 	uint8_t if_vehicle_sale_loss;
 	uint32_t if_loan_interest_rate;
+	uint32_t if_days_between_resets;
 };
 
 struct LinkGraphSettings {

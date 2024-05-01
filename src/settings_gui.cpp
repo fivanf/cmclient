@@ -2195,6 +2195,7 @@ static SettingsContainer &GetSettingsTree()
 			limitations->Add(new SettingEntry("construction.crossing_with_competitor"));
 			limitations->Add(new SettingEntry("vehicle.disable_elrails"));
 			limitations->Add(new SettingEntry("order.station_length_loading_penalty"));
+			limitations->Add(new SettingEntry("economy.if_days_between_resets"));
 		}
 
 		SettingsPage *disasters = main->Add(new SettingsPage(STR_CONFIG_SETTING_ACCIDENTS));

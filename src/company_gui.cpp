@@ -2325,6 +2325,10 @@ struct CompanyWindow : Window
 
 			this->SetWidgetDisabledState(WID_C_COMPANY_JOIN, c->is_ai);
 
+			bool reset_disabled = TimerGameCalendar::date - c->if_last_reset < _settings_game.economy.if_days_between_resets;
+			this->SetWidgetDisabledState(IF_WID_C_COMPANY_RESET, reset_disabled);
+			this->SetWidgetDisabledState(IF_WID_C_COMPANY_CLOSE, reset_disabled);
+
 			if (reinit) {
 				this->ReInit();
 				return;

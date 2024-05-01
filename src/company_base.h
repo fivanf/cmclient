@@ -121,6 +121,7 @@ struct CompanyProperties {
 	CompanySettings settings;          ///< settings specific for each company
 	
 	citymania::ext::Company cm;  ///< CityMania extra company data.
+	TimerGameCalendar::Date if_last_reset;
 
 	// TODO: Change some of these member variables to use relevant INVALID_xxx constants
 	CompanyProperties()
