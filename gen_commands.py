@@ -13,15 +13,15 @@ RX_CAMEL_TO_SNAKE = re.compile(r'(?<!^)(?=[A-Z])')
 RX_CMD_CONSTANT = re.compile(r'CMD_[\w_]+')
 
 FILES = [
-    'src/misc_cmd.h',
-    'src/object_cmd.h',
-    'src/order_cmd.h',
-    'src/rail_cmd.h',
-    'src/road_cmd.h',
-    'src/station_cmd.h',
-    'src/town_cmd.h',
-    'src/tunnelbridge_cmd.h',
-    'src/script/script_cmd.h',
+    'misc_cmd.h',
+    'object_cmd.h',
+    'order_cmd.h',
+    'rail_cmd.h',
+    'road_cmd.h',
+    'station_cmd.h',
+    'town_cmd.h',
+    'tunnelbridge_cmd.h',
+    'script/script_cmd.h',
 ]
 
 BASE_DIR = Path(__file__).parent
@@ -97,7 +97,8 @@ def parse_commands():
         command_ids[cmd] = cid
         cid += 1
 
-    for f in glob.glob(str(BASE_DIR / 'src' / '*_cmd.h')) + glob.glob(str(BASE_DIR / 'src' / 'script' / '*_cmd.h')):
+    for f in glob.glob(str(BASE_DIR / 'src' / '*_cmd.h')) + glob.glob(str(BASE_DIR / 'src' / '*' / '*_cmd.h')):
+    # for f in glob.glob(str(BASE_DIR / 'src' / 'group_cmd.h')):
         includes.append(Path(f).name)
         data = open(f).read()
         traits = {}
